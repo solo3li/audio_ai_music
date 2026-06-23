@@ -9,6 +9,17 @@ using System.Text.Json;
 
 namespace NexClone.Backend.Controllers.Api
 {
+    public class AiEditRequest
+    {
+        public string Prompt { get; set; }
+        public JsonElement Timeline { get; set; }
+    }
+
+    public class AiVideoGenRequest
+    {
+        public string Prompt { get; set; }
+    }
+
     [ApiController]
     [Route("api/video-editor")]
     // [Authorize]
@@ -31,26 +42,24 @@ namespace NexClone.Backend.Controllers.Api
             _minioMediaService = minioMediaService;
         }
 
-        public class VoiceSwapRequest
-        {
-            public string SourceAudioUrl { get; set; } = string.Empty;
-            public string VoiceId { get; set; } = string.Empty;
-            public string Emotion { get; set; } = string.Empty;
-        }
-
-        public class SubtitlesRequest
-        {
-            public string SourceAudioUrl { get; set; } = string.Empty;
-        }
-
         [HttpPost("voice-swap")]
-        public async Task<IActionResult> VoiceSwap([FromBody] VoiceSwapRequest request)
+        [RequestSizeLimit(524288000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 524288000)]
+        public async Task<IActionResult> VoiceSwap([FromForm] IFormFile file, [FromForm] string? voiceId = null, [FromForm] string? emotion = null)
         {
             try
             {
-                // 1. Download source audio
-                var client = _httpClientFactory.CreateClient();
-                var audioBytes = await client.GetByteArrayAsync(request.SourceAudioUrl);
+                if (file == null || file.Length == 0) return BadRequest(new { success = false, message = "No file provided" });
+
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                var audioBytes = ms.ToArray();
+
+                if (!file.FileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) && 
+                    !file.FileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                {
+                    audioBytes = await ConvertToMp3Async(audioBytes);
+                }
 
                 // 2. Call Whisper to get text
                 var openAiConfig = await _dbContext.ApiConfigurations.FirstOrDefaultAsync(c => c.ProviderName == "OpenAI" && c.IsActive);
@@ -61,17 +70,17 @@ namespace NexClone.Backend.Controllers.Api
                     return BadRequest(new { success = false, message = "Could not transcribe audio." });
 
                 // 3. Resolve Voice
-                long.TryParse(request.VoiceId, out var voiceId);
-                var voice = await _dbContext.Voices.FirstOrDefaultAsync(v => v.Id == voiceId);
+                long.TryParse(voiceId, out var parsedVoiceId);
+                var voice = await _dbContext.Voices.FirstOrDefaultAsync(v => v.Id == parsedVoiceId);
                 string voiceName = voice?.VoiceName ?? "alloy";
 
                 // Resolve Emotion/Style
                 string styleInstruction = "";
-                if (!string.IsNullOrWhiteSpace(request.Emotion))
+                if (!string.IsNullOrWhiteSpace(emotion))
                 {
-                    long.TryParse(request.Emotion, out var emotionId);
-                    var emotion = await _dbContext.Emotions.FirstOrDefaultAsync(e => e.Id == emotionId);
-                    if (emotion != null) styleInstruction = emotion.Value ?? emotion.Name ?? "";
+                    long.TryParse(emotion, out var emotionId);
+                    var emotionObj = await _dbContext.Emotions.FirstOrDefaultAsync(e => e.Id == emotionId);
+                    if (emotionObj != null) styleInstruction = emotionObj.Value ?? emotionObj.Name ?? "";
                 }
 
                 // 4. Synthesize new audio via TtsService
@@ -85,18 +94,29 @@ namespace NexClone.Backend.Controllers.Api
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = ex.Message });
+                Console.WriteLine($"[AiVideoEditor] ERROR: {ex}");
+                return StatusCode(500, new { success = false, message = ex.ToString() });
             }
         }
 
         [HttpPost("subtitles")]
-        public async Task<IActionResult> GenerateSubtitles([FromBody] SubtitlesRequest request)
+        [RequestSizeLimit(524288000)]
+        [RequestFormLimits(MultipartBodyLengthLimit = 524288000)]
+        public async Task<IActionResult> GenerateSubtitles([FromForm] IFormFile file)
         {
             try
             {
-                // 1. Download source audio
-                var client = _httpClientFactory.CreateClient();
-                var audioBytes = await client.GetByteArrayAsync(request.SourceAudioUrl);
+                if (file == null || file.Length == 0) return BadRequest(new { success = false, message = "No file provided" });
+
+                using var ms = new MemoryStream();
+                await file.CopyToAsync(ms);
+                var audioBytes = ms.ToArray();
+
+                if (!file.FileName.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) && 
+                    !file.FileName.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+                {
+                    audioBytes = await ConvertToMp3Async(audioBytes);
+                }
 
                 // 2. Call Whisper (verbose_json)
                 var openAiConfig = await _dbContext.ApiConfigurations.FirstOrDefaultAsync(c => c.ProviderName == "OpenAI" && c.IsActive);
@@ -108,7 +128,154 @@ namespace NexClone.Backend.Controllers.Api
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { success = false, message = ex.Message });
+                Console.WriteLine($"[AiVideoEditor] ERROR: {ex}");
+                return StatusCode(500, new { success = false, message = ex.ToString() });
+            }
+        }
+
+        [HttpPost("ai-edit")]
+        public async Task<IActionResult> AiEdit([FromBody] AiEditRequest request)
+        {
+            try
+            {
+                var openAiConfig = await _dbContext.ApiConfigurations.FirstOrDefaultAsync(c => c.ProviderName == "OpenAI" && c.IsActive);
+                if (openAiConfig == null) return BadRequest(new { error = "OpenAI configuration missing." });
+
+                using var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAiConfig.ApiKey}");
+                
+                var payload = new {
+                    model = "gpt-4o",
+                    messages = new[] {
+                        new { role = "system", content = "You are an AI video timeline editor. The user provides a timeline JSON and a prompt. Modify the timeline JSON based on the prompt. Return ONLY valid JSON array without markdown blocks. Do not wrap in ```json." },
+                        new { role = "user", content = $"Prompt: {request.Prompt}\nTimeline: {request.Timeline.GetRawText()}" }
+                    }
+                };
+                
+                var res = await client.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", payload);
+                var resultStr = await res.Content.ReadAsStringAsync();
+                
+                using var jsonDoc = JsonDocument.Parse(resultStr);
+                var contentStr = jsonDoc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+                contentStr = contentStr.Trim();
+                if (contentStr.StartsWith("```json")) contentStr = contentStr.Substring(7);
+                if (contentStr.StartsWith("```")) contentStr = contentStr.Substring(3);
+                if (contentStr.EndsWith("```")) contentStr = contentStr.Substring(0, contentStr.Length - 3);
+
+                var newTimeline = JsonDocument.Parse(contentStr.Trim());
+                
+                return Ok(new { timeline = newTimeline.RootElement });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpPost("ai-video-gen")]
+        public async Task<IActionResult> AiVideoGen([FromBody] AiVideoGenRequest request)
+        {
+            try
+            {
+                var openAiConfig = await _dbContext.ApiConfigurations.FirstOrDefaultAsync(c => c.ProviderName == "OpenAI" && c.IsActive);
+                if (openAiConfig == null) return BadRequest(new { error = "OpenAI configuration missing." });
+
+                using var client = _httpClientFactory.CreateClient();
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAiConfig.ApiKey}");
+                
+                var payload = new {
+                    model = "gpt-4o",
+                    messages = new[] {
+                        new { role = "system", content = "Create a short video plan based on the prompt. Return JSON with exactly this structure: { \"title_card\": { \"text\": \"string\", \"duration\": number, \"color\": \"#hex\" }, \"sections\": [ { \"keyword\": \"string\", \"duration\": number, \"filter\": \"css string\", \"text\": \"string\", \"text_y\": number } ], \"color_grade\": \"css string\" }. Ensure the response is pure JSON without markdown blocks." },
+                        new { role = "user", content = $"Prompt: {request.Prompt}" }
+                    }
+                };
+                
+                var res = await client.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", payload);
+                var resultStr = await res.Content.ReadAsStringAsync();
+                
+                using var jsonDoc = JsonDocument.Parse(resultStr);
+                var contentStr = jsonDoc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+                contentStr = contentStr.Trim();
+                if (contentStr.StartsWith("```json")) contentStr = contentStr.Substring(7);
+                if (contentStr.StartsWith("```")) contentStr = contentStr.Substring(3);
+                if (contentStr.EndsWith("```")) contentStr = contentStr.Substring(0, contentStr.Length - 3);
+
+                var plan = JsonDocument.Parse(contentStr.Trim());
+                
+                // Parse sections to generate mediaUrls
+                var mediaUrls = new List<string>();
+                var mediaTypes = new List<string>();
+                
+                if (plan.RootElement.TryGetProperty("sections", out var sections))
+                {
+                    foreach (var sec in sections.EnumerateArray())
+                    {
+                        var keyword = sec.GetProperty("keyword").GetString();
+                        // Generate dummy URL based on keyword using Unsplash
+                        mediaUrls.Add($"https://source.unsplash.com/1920x1080/?{Uri.EscapeDataString(keyword)}");
+                        mediaTypes.Add("image");
+                    }
+                }
+
+                return Ok(new { 
+                    plan = plan.RootElement,
+                    mediaUrls = mediaUrls,
+                    mediaTypes = mediaTypes,
+                    music = ""
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
+        [HttpGet("openai-key")]
+        public async Task<IActionResult> GetOpenAiKey()
+        {
+            var openAiConfig = await _dbContext.ApiConfigurations.FirstOrDefaultAsync(c => c.ProviderName == "OpenAI" && c.IsActive);
+            if (openAiConfig == null) return BadRequest(new { error = "OpenAI configuration missing." });
+            return Ok(new { apiKey = openAiConfig.ApiKey });
+        }
+
+        private async Task<byte[]> ConvertToMp3Async(byte[] inputBytes)
+        {
+            string tempInput = Path.GetTempFileName();
+            string tempOutput = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.mp3");
+
+            try
+            {
+                await System.IO.File.WriteAllBytesAsync(tempInput, inputBytes);
+
+                var process = new System.Diagnostics.Process
+                {
+                    StartInfo = new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "ffmpeg",
+                        Arguments = $"-y -i \"{tempInput}\" -vn -acodec libmp3lame -q:a 2 \"{tempOutput}\"",
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+                await process.WaitForExitAsync();
+
+                if (process.ExitCode != 0)
+                {
+                    string error = await process.StandardError.ReadToEndAsync();
+                    throw new Exception($"FFmpeg conversion failed: {error}");
+                }
+
+                return await System.IO.File.ReadAllBytesAsync(tempOutput);
+            }
+            finally
+            {
+                if (System.IO.File.Exists(tempInput)) System.IO.File.Delete(tempInput);
+                if (System.IO.File.Exists(tempOutput)) System.IO.File.Delete(tempOutput);
             }
         }
 

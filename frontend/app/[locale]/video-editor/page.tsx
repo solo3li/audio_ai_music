@@ -120,18 +120,25 @@ export default function VideoEditor() {
     if (!selectedItem || !selectedVoiceId || isSwappingVoice) return;
     setIsSwappingVoice(true);
     try {
-      const res = await api.post('/api/video-editor/voice-swap', {
-        sourceAudioUrl: selectedItem.url,
-        voiceId: selectedVoiceId,
-        emotion: selectedEmotionId
+      // Fetch the file from the blob URL
+      const response = await fetch(selectedItem.url);
+      const blob = await response.blob();
+      
+      const formData = new FormData();
+      formData.append('file', blob, selectedItem.name || 'audio.mp3');
+      formData.append('voiceId', selectedVoiceId);
+      formData.append('emotion', selectedEmotionId || '');
+
+      const res = await api.post('/api/video-editor/voice-swap', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (res.data.success && res.data.url) {
         setTimelineItems(prev => prev.map(i => i.id === selectedItem.id ? { ...i, url: res.data.url } : i));
         alert("Voice successfully swapped!");
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("Failed to swap voice");
+      alert(e.response?.data?.message || "Failed to swap voice");
     } finally {
       setIsSwappingVoice(false);
     }
@@ -140,29 +147,44 @@ export default function VideoEditor() {
   const handleGenerateSubtitles = async () => {
     setIsGeneratingSubtitles(true);
     try {
-      const audioUrl = timelineItems.find(i => i.mediaType === 'audio' || i.mediaType === 'video')?.url || "";
-      const res = await api.post('/api/video-editor/subtitles', { sourceAudioUrl: audioUrl });
+      const targetItem = timelineItems.find(i => i.mediaType === 'audio' || i.mediaType === 'video');
+      const audioUrl = targetItem?.url || "";
+      if (!audioUrl) {
+        alert("No audio found on the timeline.");
+        setIsGeneratingSubtitles(false);
+        return;
+      }
+      
+      const response = await fetch(audioUrl);
+      const blob = await response.blob();
+      
+      const formData = new FormData();
+      formData.append('file', blob, targetItem?.name || 'audio.mp3');
+
+      const res = await api.post('/api/video-editor/subtitles', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       
       if (res.data.success && res.data.subtitles) {
         const newItems: TimelineItem[] = res.data.subtitles.map((sub: any, idx: number) => ({
           id: `sub_${Date.now()}_${idx}`,
           trackId: 'T1',
           text: sub.text,
-          startTime: sub.startTime,
+          startTime: targetItem!.startTime + sub.startTime,
           duration: sub.duration,
           sourceOffset: 0,
           fontSize: 32,
           fontFamily: 'Inter',
           color: '#ffffff',
           x: 50, y: 85, width: 100, height: 100, opacity: 100, rotation: 0,
-          mediaType: 'image'
+          mediaType: 'text'
         }));
         setTimelineItems(prev => [...prev, ...newItems]);
-        alert("Subtitles generated successfully.");
+        alert("Subtitles successfully generated!");
       }
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert("Failed to generate subtitles");
+      alert(e.response?.data?.message || "Failed to generate subtitles");
     } finally {
       setIsGeneratingSubtitles(false);
     }
@@ -172,7 +194,7 @@ export default function VideoEditor() {
     if (!copilotPrompt) return;
     setIsCopilotRunning(true);
     try {
-      const res = await fetch("/api/ai-edit", {
+      const res = await fetch("http://localhost:8080/api/video-editor/ai-edit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt: copilotPrompt, timeline: timelineItems })
@@ -245,7 +267,7 @@ export default function VideoEditor() {
     setIsAiGenerating(true);
     setAiGenerateStatus('🧠 AI is planning your video...');
     try {
-      const res = await fetch('/api/ai-video-gen', {
+      const res = await fetch('http://localhost:8080/api/video-editor/ai-video-gen', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: aiVideoPrompt })

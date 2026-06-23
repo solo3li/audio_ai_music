@@ -34,12 +34,16 @@ namespace NexClone.Backend.Services.AI
             
             // Default logic if no ToolConfiguration is set
             string providerName = "OpenAI"; 
-            if (toolConfig == null)
+            if (toolConfig == null || string.IsNullOrWhiteSpace(toolConfig.ProviderName) || toolConfig.ProviderName.Equals("System", StringComparison.OrdinalIgnoreCase))
             {
                 if (language?.ToLower() == "arabic")
                 {
                     bool hasGemini = await _dbContext.ApiConfigurations.AnyAsync(c => c.ProviderName == "Gemini" && c.IsActive);
                     providerName = hasGemini ? "Gemini" : "Darijat";
+                }
+                else 
+                {
+                    providerName = "OpenAI";
                 }
             }
             else
@@ -165,16 +169,21 @@ namespace NexClone.Backend.Services.AI
             var client = _httpClientFactory.CreateClient();
             client.DefaultRequestHeaders.Add("x-goog-api-key", config.ApiKey);
 
-            var modelName = string.IsNullOrWhiteSpace(customModelName) ? "gemini-2.5-flash-preview-tts" : customModelName; 
+            var modelName = string.IsNullOrWhiteSpace(customModelName) ? "gemini-2.5-flash" : customModelName.Trim(); 
             if (string.IsNullOrWhiteSpace(customModelName) && !string.IsNullOrEmpty(config.AdditionalSettings))
             {
                 try
                 {
                     using var doc = JsonDocument.Parse(config.AdditionalSettings);
                     if (doc.RootElement.TryGetProperty("gemini_model", out var mElement))
-                        modelName = mElement.GetString() ?? modelName;
+                        modelName = (mElement.GetString() ?? modelName).Trim();
                 }
                 catch { }
+            }
+
+            if (modelName.StartsWith("models/"))
+            {
+                modelName = modelName.Substring(7);
             }
 
             var url = $"https://generativelanguage.googleapis.com/v1beta/models/{modelName}:generateContent";
