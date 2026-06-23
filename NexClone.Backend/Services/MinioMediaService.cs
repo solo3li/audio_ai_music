@@ -29,25 +29,27 @@ namespace NexClone.Backend.Services
             if (_minioClient != null) return;
 
             var appSettings = await _context.AppSettings.ToListAsync();
-            var dbEndpoint = appSettings.FirstOrDefault(s => s.Key == "S3.Endpoint")?.Value;
-            var dbAccessKey = appSettings.FirstOrDefault(s => s.Key == "S3.AccessKey")?.Value;
-            var dbSecretKey = appSettings.FirstOrDefault(s => s.Key == "S3.SecretKey")?.Value;
+            var dbEndpoint = appSettings.FirstOrDefault(s => s.Key == "Minio.Endpoint")?.Value;
+            var dbAccessKey = appSettings.FirstOrDefault(s => s.Key == "Minio.AccessKey")?.Value;
+            var dbSecretKey = appSettings.FirstOrDefault(s => s.Key == "Minio.SecretKey")?.Value;
             var dbRegion = appSettings.FirstOrDefault(s => s.Key == "S3.Region")?.Value;
-            var dbBucketName = appSettings.FirstOrDefault(s => s.Key == "S3.BucketName")?.Value;
+            var dbBucketName = appSettings.FirstOrDefault(s => s.Key == "Minio.BucketName")?.Value;
 
-            var endpoint = !string.IsNullOrWhiteSpace(dbEndpoint) ? dbEndpoint : "s3.eu-north-1.amazonaws.com";
-            var accessKey = !string.IsNullOrWhiteSpace(dbAccessKey) ? dbAccessKey : (Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID") ?? "YOUR_AWS_ACCESS_KEY");
-            var secretKey = !string.IsNullOrWhiteSpace(dbSecretKey) ? dbSecretKey : (Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY") ?? "YOUR_AWS_SECRET_KEY");
+            var endpoint = !string.IsNullOrWhiteSpace(dbEndpoint) ? dbEndpoint : "minio:9000";
+            var accessKey = !string.IsNullOrWhiteSpace(dbAccessKey) ? dbAccessKey : "minioadmin";
+            var secretKey = !string.IsNullOrWhiteSpace(dbSecretKey) ? dbSecretKey : "minioadmin";
             var region = !string.IsNullOrWhiteSpace(dbRegion) ? dbRegion : "eu-north-1";
             _region = region;
             
-            _defaultBucket = !string.IsNullOrWhiteSpace(dbBucketName) ? dbBucketName : "nexmedia-ai-files";
+            _defaultBucket = !string.IsNullOrWhiteSpace(dbBucketName) ? dbBucketName : "nexmedia";
+
+            bool useSSL = endpoint.Contains("amazonaws.com") || endpoint.StartsWith("https");
 
             _minioClient = new MinioClient()
-                .WithEndpoint(endpoint)
+                .WithEndpoint(endpoint.Replace("http://", "").Replace("https://", ""))
                 .WithCredentials(accessKey, secretKey)
                 .WithRegion(region)
-                .WithSSL(true)
+                .WithSSL(useSSL)
                 .Build();
         }
 
@@ -109,10 +111,10 @@ namespace NexClone.Backend.Services
         {
             await EnsureClientInitializedAsync();
 
-            // AWS S3 Virtual-Hosted Style URL
-            var publicEndpoint = $"{_defaultBucket}.s3.{_region}.amazonaws.com";
+            // Use localhost:9000 for local development so the frontend can access it
+            var publicEndpoint = "localhost:9000";
             
-            return $"https://{publicEndpoint}/{objectName}";
+            return $"http://{publicEndpoint}/{_defaultBucket}/{objectName}";
         }
 
         public async Task<string> GeneratePresignedUploadUrlAsync(string objectName, string contentType, string bucketName = null)

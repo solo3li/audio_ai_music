@@ -173,7 +173,6 @@ if (!app.Environment.IsDevelopment())
 app.MapOpenApi();
 app.MapScalarApiReference();
 
-app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCors("AllowNextjs");
 app.UseRateLimiter();

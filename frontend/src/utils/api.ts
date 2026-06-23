@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create an Axios instance with default configurations
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5208',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
   headers: {
     'Content-Type': 'application/json',
   },
