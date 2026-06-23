@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, MouseEvent as ReactMouseEvent, PointerEvent } from "react";
 import Link from "next/link";
+import api from '@/utils/api';
 
 interface LocalMedia { id: string; name: string; url: string; type: string; }
 type TrackType = 'video' | 'audio' | 'text' | 'sticker';
@@ -89,6 +90,82 @@ export default function VideoEditor() {
   const [stockResults, setStockResults] = useState<{url: string; thumb: string; name: string}[]>([]);
   const [isSearchingStock, setIsSearchingStock] = useState(false);
   const [activeAnimTab] = useState<'keyframes'>('keyframes');
+
+  // TTS & Subtitles State
+  const [voices, setVoices] = useState<any[]>([]);
+  const [emotions, setEmotions] = useState<any[]>([]);
+  const [isSwappingVoice, setIsSwappingVoice] = useState(false);
+  const [isGeneratingSubtitles, setIsGeneratingSubtitles] = useState(false);
+  const [selectedVoiceId, setSelectedVoiceId] = useState("");
+  const [selectedEmotionId, setSelectedEmotionId] = useState("");
+
+  useEffect(() => {
+    const fetchTtsData = async () => {
+      try {
+        const [vRes, eRes] = await Promise.all([
+          api.get('/api/platform/voices'),
+          api.get('/api/platform/emotions')
+        ]);
+        setVoices(vRes.data || []);
+        setEmotions(eRes.data || []);
+        if (vRes.data && vRes.data.length > 0) setSelectedVoiceId(vRes.data[0].id);
+      } catch (e) {
+        console.error("Failed to load TTS data for Video Editor", e);
+      }
+    };
+    fetchTtsData();
+  }, []);
+
+  const handleVoiceSwap = async () => {
+    if (!selectedItem || !selectedVoiceId || isSwappingVoice) return;
+    setIsSwappingVoice(true);
+    try {
+      const res = await api.post('/api/video-editor/voice-swap', {
+        sourceAudioUrl: selectedItem.url,
+        voiceId: selectedVoiceId,
+        emotion: selectedEmotionId
+      });
+      if (res.data.success) {
+        alert(res.data.message);
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to swap voice");
+    } finally {
+      setIsSwappingVoice(false);
+    }
+  };
+
+  const handleGenerateSubtitles = async () => {
+    setIsGeneratingSubtitles(true);
+    try {
+      const audioUrl = timelineItems.find(i => i.mediaType === 'audio' || i.mediaType === 'video')?.url || "";
+      const res = await api.post('/api/video-editor/subtitles', { sourceAudioUrl: audioUrl });
+      
+      if (res.data.success && res.data.subtitles) {
+        const newItems: TimelineItem[] = res.data.subtitles.map((sub: any, idx: number) => ({
+          id: `sub_${Date.now()}_${idx}`,
+          trackId: 'T1',
+          text: sub.text,
+          startTime: sub.startTime,
+          duration: sub.duration,
+          sourceOffset: 0,
+          fontSize: 32,
+          fontFamily: 'Inter',
+          color: '#ffffff',
+          x: 50, y: 85, width: 100, height: 100, opacity: 100, rotation: 0,
+          mediaType: 'image'
+        }));
+        setTimelineItems(prev => [...prev, ...newItems]);
+        alert("Subtitles generated successfully.");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Failed to generate subtitles");
+    } finally {
+      setIsGeneratingSubtitles(false);
+    }
+  };
 
   const runCopilot = async () => {
     if (!copilotPrompt) return;
@@ -1010,6 +1087,15 @@ export default function VideoEditor() {
                     <div className="w-10 h-10 bg-purple-500/20 text-purple-400 rounded-md flex items-center justify-center mr-3 group-hover:bg-purple-500 group-hover:text-white transition-colors"><i className="fas fa-font text-lg"></i></div>
                     <div className="text-left"><h3 className="text-sm font-bold">Standard Text</h3></div>
                  </button>
+                 <button onClick={handleGenerateSubtitles} disabled={isRendering || isGeneratingSubtitles} className="w-full p-4 border border-[var(--color-bento-border)] rounded-lg bg-[#1a1a1a] flex items-center hover:border-green-500 transition-colors group disabled:opacity-50">
+                    <div className="w-10 h-10 bg-green-500/20 text-green-400 rounded-md flex items-center justify-center mr-3 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                      {isGeneratingSubtitles ? <i className="fas fa-circle-notch fa-spin"></i> : <i className="fas fa-closed-captioning text-lg"></i>}
+                    </div>
+                    <div className="text-left">
+                      <h3 className="text-sm font-bold">Auto Subtitles</h3>
+                      <p className="text-[10px] text-gray-500">AI sync to audio</p>
+                    </div>
+                 </button>
               </div>
             )}
             {activeAssetTab === "stickers" && (
@@ -1194,6 +1280,20 @@ export default function VideoEditor() {
                       <div className="space-y-1">
                         <div className="flex justify-between text-xs font-bold text-[#a1a1aa]"><span>Volume</span> <span>{selectedItem.volume ?? 100}%</span></div>
                         <input type="range" min="0" max="100" value={selectedItem.volume ?? 100} onChange={(e) => updateSelectedProperty('volume', Number(e.target.value))} className="w-full h-1 accent-green-400 bg-[#262626] rounded-lg" />
+                      </div>
+
+                      <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 space-y-2 mt-4">
+                        <p className="text-xs font-bold text-purple-400 mb-2"><i className="fas fa-magic mr-1"></i> AI Voice Swap</p>
+                        <select className="bento-input text-xs w-full" value={selectedVoiceId} onChange={(e) => setSelectedVoiceId(e.target.value)}>
+                          {voices.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
+                        </select>
+                        <select className="bento-input text-xs w-full" value={selectedEmotionId} onChange={(e) => setSelectedEmotionId(e.target.value)}>
+                          <option value="">Default Emotion</option>
+                          {emotions.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
+                        </select>
+                        <button onClick={handleVoiceSwap} disabled={isSwappingVoice || !selectedVoiceId} className="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-md transition-colors flex justify-center items-center">
+                          {isSwappingVoice ? <><i className="fas fa-circle-notch fa-spin mr-2"></i> Swapping...</> : "Apply Voice Swap"}
+                        </button>
                       </div>
                    </div>
                 )}

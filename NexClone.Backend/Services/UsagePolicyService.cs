@@ -125,8 +125,8 @@ namespace NexClone.Backend.Services
             }
             else if (toolId == "video-editor")
             {
-                policy.Enabled = plan.VideoEditorEnabled;
-                policy.CostPerUnit = plan.VideoEditorCostPerExport;
+                policy.Enabled = true; // Unlimited access for all users
+                policy.CostPerUnit = 0; // Free
                 policy.MaxCharsPerRequest = -1; // No chars limit for video
                 policy.MaxFileSizeMb = -1; // or define if you have a file size limit
             }
