@@ -125,8 +125,9 @@ export default function VideoEditor() {
         voiceId: selectedVoiceId,
         emotion: selectedEmotionId
       });
-      if (res.data.success) {
-        alert(res.data.message);
+      if (res.data.success && res.data.url) {
+        setTimelineItems(prev => prev.map(i => i.id === selectedItem.id ? { ...i, url: res.data.url } : i));
+        alert("Voice successfully swapped!");
       }
     } catch (e) {
       console.error(e);
