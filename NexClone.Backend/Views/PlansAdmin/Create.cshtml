@@ -61,8 +61,8 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; background: #f4f4f4; padding: 1.5rem;">
             <div class="bx--form-item">
                 <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
-                    <input type="hidden" name="TtsEnabled" value="false" />
                     <input type="checkbox" id="TtsEnabled" name="TtsEnabled" value="true" class="bx--checkbox" @(Model?.TtsEnabled != false ? "checked" : "") style="cursor: pointer;" />
+                    <input type="hidden" name="TtsEnabled" value="false" />
                     <label for="TtsEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable TTS</label>
                 </div>
             </div>
@@ -88,8 +88,8 @@
             </div>
             <div class="bx--form-item">
                 <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
-                    <input type="hidden" name="TtsCustomInstructionsEnabled" value="false" />
                     <input type="checkbox" id="TtsCustomInstructionsEnabled" name="TtsCustomInstructionsEnabled" value="true" class="bx--checkbox" @(Model?.TtsCustomInstructionsEnabled == true ? "checked" : "") style="cursor: pointer;" />
+                    <input type="hidden" name="TtsCustomInstructionsEnabled" value="false" />
                     <label for="TtsCustomInstructionsEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable Custom Instructions</label>
                 </div>
             </div>
@@ -99,8 +99,8 @@
         <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; background: #f4f4f4; padding: 1.5rem;">
             <div class="bx--form-item">
                 <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
-                    <input type="hidden" name="SttEnabled" value="false" />
                     <input type="checkbox" id="SttEnabled" name="SttEnabled" value="true" class="bx--checkbox" @(Model?.SttEnabled != false ? "checked" : "") style="cursor: pointer;" />
+                    <input type="hidden" name="SttEnabled" value="false" />
                     <label for="SttEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable STT</label>
                 </div>
             </div>
@@ -119,11 +119,45 @@
             </div>
         </div>
 
+        <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.1rem;">Video Editor Settings</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; background: #f4f4f4; padding: 1.5rem;">
+            <div class="bx--form-item">
+                <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
+                    <input type="checkbox" id="VideoEditorEnabled" name="VideoEditorEnabled" value="true" class="bx--checkbox" @(Model?.VideoEditorEnabled != false ? "checked" : "") style="cursor: pointer;" />
+                    <input type="hidden" name="VideoEditorEnabled" value="false" />
+                    <label for="VideoEditorEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable Video Editor</label>
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="VideoEditorCostPerExport" class="bx--label">Cost per Export</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="VideoEditorCostPerExport" type="number" class="bx--text-input" name="VideoEditorCostPerExport" required min="0" step="0.0001" value="@(Model?.VideoEditorCostPerExport ?? 5.0m)">
+                </div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.1rem;">3D Studio Settings</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; background: #f4f4f4; padding: 1.5rem;">
+            <div class="bx--form-item">
+                <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
+                    <input type="checkbox" id="ThreeDStudioEnabled" name="ThreeDStudioEnabled" value="true" class="bx--checkbox" @(Model?.ThreeDStudioEnabled != false ? "checked" : "") style="cursor: pointer;" />
+                    <input type="hidden" name="ThreeDStudioEnabled" value="false" />
+                    <label for="ThreeDStudioEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable 3D Studio</label>
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="ThreeDStudioCostPerExport" class="bx--label">Cost per Export</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="ThreeDStudioCostPerExport" type="number" class="bx--text-input" name="ThreeDStudioCostPerExport" required min="0" step="0.0001" value="@(Model?.ThreeDStudioCostPerExport ?? 5.0m)">
+                </div>
+            </div>
+        </div>
+
         <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;">
             <div class="bx--form-item">
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
-                    <input type="hidden" name="IsFreeTrial" value="false" />
                     <input type="checkbox" id="IsFreeTrial" name="IsFreeTrial" value="true" class="bx--checkbox" @(Model?.IsFreeTrial == true ? "checked" : "") style="cursor: pointer;" />
+                    <input type="hidden" name="IsFreeTrial" value="false" />
                     <label for="IsFreeTrial" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Is this a Free Trial plan?</label>
                 </div>
                 <div class="bx--form__helper-text">If checked, this plan will be automatically assigned to new users upon registration.</div>

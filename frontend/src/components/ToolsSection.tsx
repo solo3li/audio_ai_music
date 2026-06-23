@@ -192,6 +192,19 @@ export default function ToolsSection() {
       tags: t.raw('list.t2.tags'),
       image: "/images/tool-2.png",
       href: "/tools/text-to-voice"
+    },
+    {
+      icon: Scissors,
+      title: t('list.t5.title'),
+      desc: t('list.t5.desc'),
+      badge: t('list.t5.badge'),
+      badgeColor: "bg-blue-500/20 text-blue-300 border-blue-500/30",
+      gradient: "from-blue-600/20 to-cyan-600/10",
+      iconBg: "from-blue-500 to-cyan-600",
+      glowColor: "shadow-blue-500/20",
+      tags: t.raw('list.t5.tags'),
+      image: "/images/tool-5.png",
+      href: "/video-editor"
     }
   ];
 

@@ -46,6 +46,14 @@ namespace NexClone.Backend.Models
         public int SttMaxFileSizeMb { get; set; } = 25;
         public decimal SttCostPerMinute { get; set; } = 1.0m;
 
+        // Video Editor Settings
+        public bool VideoEditorEnabled { get; set; } = true;
+        public decimal VideoEditorCostPerExport { get; set; } = 5.0m;
+
+        // 3D Studio Settings
+        public bool ThreeDStudioEnabled { get; set; } = true;
+        public decimal ThreeDStudioCostPerExport { get; set; } = 5.0m;
+
         // Free Trial Flag
         public bool IsFreeTrial { get; set; } = false;
 

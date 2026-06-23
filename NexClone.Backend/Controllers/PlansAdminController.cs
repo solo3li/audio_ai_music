@@ -82,6 +82,12 @@ namespace NexClone.Backend.Controllers
                 existingPlan.SttMaxFileSizeMb = plan.SttMaxFileSizeMb;
                 existingPlan.SttCostPerMinute = plan.SttCostPerMinute;
 
+                existingPlan.VideoEditorEnabled = plan.VideoEditorEnabled;
+                existingPlan.VideoEditorCostPerExport = plan.VideoEditorCostPerExport;
+
+                existingPlan.ThreeDStudioEnabled = plan.ThreeDStudioEnabled;
+                existingPlan.ThreeDStudioCostPerExport = plan.ThreeDStudioCostPerExport;
+
                 existingPlan.IsFreeTrial = plan.IsFreeTrial;
 
                 await _context.SaveChangesAsync();

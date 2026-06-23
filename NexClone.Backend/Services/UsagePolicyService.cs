@@ -123,6 +123,20 @@ namespace NexClone.Backend.Services
                 policy.MaxFileSizeMb = plan.SttMaxFileSizeMb;
                 policy.CostPerUnit = plan.SttCostPerMinute;
             }
+            else if (toolId == "video-editor")
+            {
+                policy.Enabled = plan.VideoEditorEnabled;
+                policy.CostPerUnit = plan.VideoEditorCostPerExport;
+                policy.MaxCharsPerRequest = -1; // No chars limit for video
+                policy.MaxFileSizeMb = -1; // or define if you have a file size limit
+            }
+            else if (toolId == "3d-studio")
+            {
+                policy.Enabled = plan.ThreeDStudioEnabled;
+                policy.CostPerUnit = plan.ThreeDStudioCostPerExport;
+                policy.MaxCharsPerRequest = -1;
+                policy.MaxFileSizeMb = -1;
+            }
 
             return policy;
         }
