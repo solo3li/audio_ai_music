@@ -1,0 +1,135 @@
+@model IEnumerable<NexClone.Backend.Models.AppSetting>
+
+<div class="bx--grid" style="padding-left: 0; max-width: 800px; margin-left: 0;">
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <h2 style="margin: 0; font-weight: 400; font-size: 1.5rem;">@ViewData["Title"]</h2>
+        <p style="color: #525252; margin-top: 0.5rem;">Manage site configurations, maintenance modes, and storage independently.</p>
+    </div>
+
+    <!-- SITE SETTINGS FORM -->
+    <form action="@Url.Action("SaveSettings", "SettingsAdmin")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0; margin-bottom: 2rem; border-top: 4px solid #0f62fe;">
+        @Html.AntiForgeryToken()
+
+        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">Site Settings</h3>
+        
+        <div class="bx--form-item bx--checkbox-wrapper" style="margin-bottom: 1.5rem;">
+            @{
+                var maintenanceModeStr = Model.FirstOrDefault(s => s.Key == "Site.MaintenanceMode")?.Value ?? "false";
+                bool isMaintenanceMode = bool.TryParse(maintenanceModeStr, out var m) && m;
+            }
+            <input type="hidden" name="settings[Site.MaintenanceMode]" value="false" id="hidden_Site_MaintenanceMode" />
+            <input id="Site_MaintenanceMode" class="bx--checkbox" type="checkbox" value="true" name="settings[Site.MaintenanceMode]" @(isMaintenanceMode ? "checked" : "") onchange="document.getElementById('hidden_Site_MaintenanceMode').disabled = this.checked;">
+            <label for="Site_MaintenanceMode" class="bx--checkbox-label" title="Enable Global Maintenance Mode">
+                <span class="bx--checkbox-label-text">Enable Global Maintenance Mode (Will show maintenance screen to all users)</span>
+            </label>
+            <script>document.getElementById('hidden_Site_MaintenanceMode').disabled = document.getElementById('Site_MaintenanceMode').checked;</script>
+        </div>
+
+        <div class="bx--form-item" style="margin-bottom: 1rem;">
+            <label for="Site_MaintenanceEndDate" class="bx--label">Maintenance End Date (Optional)</label>
+            <input id="Site_MaintenanceEndDate" type="datetime-local" class="bx--text-input" name="settings[Site.MaintenanceEndDate]" value="@Model.FirstOrDefault(s => s.Key == "Site.MaintenanceEndDate")?.Value" placeholder="YYYY-MM-DDTHH:MM">
+            <div class="bx--form__helper-text">Leave blank for indefinite maintenance.</div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+            <button type="submit" class="bx--btn bx--btn--primary">Save Site Settings</button>
+        </div>
+    </form>
+
+    <!-- TOOLS MAINTENANCE FORM -->
+    <form action="@Url.Action("SaveToolsMaintenance", "SettingsAdmin")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0; margin-bottom: 2rem; border-top: 4px solid #da1e28;">
+        @Html.AntiForgeryToken()
+
+        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">Tools Maintenance</h3>
+        <p style="color: #525252; margin-bottom: 1rem; font-size: 0.875rem;">Enable maintenance mode for specific tools. This will show a maintenance screen to users attempting to access them.</p>
+
+        @if (ViewBag.ToolConfigurations != null)
+        {
+            var tools = (IEnumerable<NexClone.Backend.Models.ToolConfiguration>)ViewBag.ToolConfigurations;
+            foreach (var tool in tools)
+            {
+                <div class="bx--form-item bx--checkbox-wrapper" style="margin-bottom: 1rem;">
+                    <input id="toolMaintenance_@(tool.Id)" class="bx--checkbox" type="checkbox" name="toolMaintenance_@(tool.Id)" value="true" @(tool.IsMaintenanceMode ? "checked" : "")>
+                    <label for="toolMaintenance_@(tool.Id)" class="bx--checkbox-label" title="Enable Maintenance Mode for @tool.ToolName">
+                        <span class="bx--checkbox-label-text">@tool.ToolName (Provider: @tool.ProviderName)</span>
+                    </label>
+                </div>
+            }
+        }
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+            <button type="submit" class="bx--btn bx--btn--primary">Save Tools Maintenance</button>
+        </div>
+    </form>
+
+    <!-- CORS SETTINGS FORM -->
+    <form action="@Url.Action("SaveSettings", "SettingsAdmin")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0; margin-bottom: 2rem; border-top: 4px solid #24a148;">
+        @Html.AntiForgeryToken()
+
+        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">Origin (CORS) Settings</h3>
+        
+        <div class="bx--form-item" style="margin-bottom: 1rem;">
+            <label for="Origin_AllowedOrigins" class="bx--label">Allowed Origins</label>
+            <input id="Origin_AllowedOrigins" type="text" class="bx--text-input" name="settings[Origin.AllowedOrigins]" value="@Model.FirstOrDefault(s => s.Key == "Origin.AllowedOrigins")?.Value" placeholder="http://localhost:3000,https://nexclone.com">
+            <div class="bx--form__helper-text">Comma-separated list of allowed origins. Use * to allow all (not recommended).</div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+            <button type="submit" class="bx--btn bx--btn--primary">Save Origin Settings</button>
+        </div>
+    </form>
+
+    <!-- AWS S3 SETTINGS FORM -->
+    <form action="@Url.Action("SaveSettings", "SettingsAdmin")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0; margin-bottom: 2rem; border-top: 4px solid #8a3ffc;">
+        @Html.AntiForgeryToken()
+
+        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">AWS S3 Settings</h3>
+        
+        <div class="bx--form-item" style="margin-bottom: 1.5rem;">
+            <label for="S3_Endpoint" class="bx--label">Endpoint</label>
+            <input id="S3_Endpoint" type="text" class="bx--text-input" name="settings[S3.Endpoint]" value="@Model.FirstOrDefault(s => s.Key == "S3.Endpoint")?.Value" placeholder="s3.amazonaws.com">
+        </div>
+
+        <div class="bx--form-item" style="margin-bottom: 1.5rem;">
+            <label for="S3_Region" class="bx--label">Region</label>
+            <input id="S3_Region" type="text" class="bx--text-input" name="settings[S3.Region]" value="@Model.FirstOrDefault(s => s.Key == "S3.Region")?.Value" placeholder="eu-north-1">
+        </div>
+
+        <div class="bx--form-item" style="margin-bottom: 1.5rem;">
+            <label for="S3_AccessKey" class="bx--label">Access Key</label>
+            <input id="S3_AccessKey" type="text" class="bx--text-input" name="settings[S3.AccessKey]" value="@Model.FirstOrDefault(s => s.Key == "S3.AccessKey")?.Value">
+        </div>
+
+        <div class="bx--form-item" style="margin-bottom: 1.5rem;">
+            <label for="S3_SecretKey" class="bx--label">Secret Key</label>
+            <input id="S3_SecretKey" type="password" class="bx--text-input" name="settings[S3.SecretKey]" value="@Model.FirstOrDefault(s => s.Key == "S3.SecretKey")?.Value">
+        </div>
+
+        <div class="bx--form-item" style="margin-bottom: 1rem;">
+            <label for="S3_BucketName" class="bx--label">Bucket Name</label>
+            <input id="S3_BucketName" type="text" class="bx--text-input" name="settings[S3.BucketName]" value="@Model.FirstOrDefault(s => s.Key == "S3.BucketName")?.Value">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+            <button type="submit" class="bx--btn bx--btn--primary">Save AWS S3 Settings</button>
+        </div>
+    </form>
+
+    <!-- GOOGLE OAUTH SETTINGS FORM -->
+    <form action="@Url.Action("SaveSettings", "SettingsAdmin")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0; margin-bottom: 2rem; border-top: 4px solid #ea4335;">
+        @Html.AntiForgeryToken()
+
+        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid #e0e0e0; padding-bottom: 0.5rem;">Google OAuth Settings</h3>
+        <p style="color: #525252; margin-bottom: 1rem; font-size: 0.875rem;">Configure Google Login for your users.</p>
+        
+        <div class="bx--form-item" style="margin-bottom: 1rem;">
+            <label for="OAuth_GoogleClientId" class="bx--label">Google Client ID</label>
+            <input id="OAuth_GoogleClientId" type="text" class="bx--text-input" name="settings[OAuth.GoogleClientId]" value="@Model.FirstOrDefault(s => s.Key == "OAuth.GoogleClientId")?.Value" placeholder="xxxx-xxxx.apps.googleusercontent.com">
+            <div class="bx--form__helper-text">Found in Google Cloud Console > APIs & Services > Credentials</div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 1rem;">
+            <button type="submit" class="bx--btn bx--btn--primary">Save Google OAuth Settings</button>
+        </div>
+    </form>
+</div>

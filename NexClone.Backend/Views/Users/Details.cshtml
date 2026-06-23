@@ -1,0 +1,171 @@
+@model NexClone.Backend.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "User Details";
+    var currentSub = Model.Subscriptions?.FirstOrDefault(s => s.Status == "active");
+}
+
+<div class="bx--grid bx--grid--full-width">
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <div class="bx--col">
+            <h1 class="bx--type-productive-heading-05">User Details: @Model.Email</h1>
+        </div>
+    </div>
+
+    <div class="bx--row">
+        <div class="bx--col-lg-8" style="margin-bottom: 2rem;">
+            <!-- User Information Card -->
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Profile Information</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div><strong>Name:</strong> @(string.IsNullOrEmpty(Model.FullName) ? "N/A" : Model.FullName)</div>
+                    <div><strong>Email:</strong> @Model.Email</div>
+                    <div><strong>Country:</strong> @(string.IsNullOrEmpty(Model.Country) ? "N/A" : Model.Country)</div>
+                    <div><strong>Joined:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy")</div>
+                    <div><strong>Available Credits:</strong> @Model.AvailableCredits</div>
+                    <div>
+                        <strong>Current Plan:</strong> 
+                        @if (currentSub?.Plan != null)
+                        {
+                            <span class="bx--tag bx--tag--green">@currentSub.Plan.Name</span>
+                            <span>(Expires: @currentSub.EndDate.ToString("MMM dd, yyyy"))</span>
+                        }
+                        else
+                        {
+                            <span class="bx--tag bx--tag--gray">None</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Change Password Section -->
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; margin-top: 2rem;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Change Password</h3>
+                
+                <form asp-action="ChangePassword" method="post">
+                    <input type="hidden" name="userId" value="@Model.Id" />
+                    
+                    <div class="bx--form-item" style="margin-bottom: 1rem;">
+                        <label for="newPassword" class="bx--label">New Password</label>
+                        <div class="bx--text-input__field-wrapper">
+                            <input id="newPassword" type="password" class="bx--text-input" name="newPassword" required minlength="6" placeholder="Enter new password...">
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="bx--btn bx--btn--primary">Change Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="bx--col-lg-8">
+            <!-- Manage Credits Section -->
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; margin-bottom: 2rem;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Manage Credits</h3>
+                
+                <form asp-action="AdjustCredits" method="post">
+                    <input type="hidden" name="userId" value="@Model.Id" />
+                    
+                    <div style="display: flex; gap: 1rem; align-items: flex-end; margin-bottom: 1rem;">
+                        <div class="bx--form-item" style="flex: 1;">
+                            <label for="amount" class="bx--label">Amount</label>
+                            <div class="bx--text-input__field-wrapper">
+                                <input id="amount" type="number" class="bx--text-input" name="amount" required min="0.01" step="0.01" placeholder="Enter amount...">
+                            </div>
+                        </div>
+                        <div class="bx--form-item" style="flex: 1;">
+                            <label for="operation" class="bx--label">Operation</label>
+                            <div class="bx--select">
+                                <select id="operation" name="operation" class="bx--select-input" required>
+                                    <option value="add">Add (+)</option>
+                                    <option value="remove">Remove (-)</option>
+                                </select>
+                                <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--select__arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path></svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="bx--btn bx--btn--primary">Update Credits</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Assign Plan Section -->
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; height: 100%;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Assign New Plan</h3>
+                
+                <form asp-action="AssignPlan" method="post">
+                    <input type="hidden" name="userId" value="@Model.Id" />
+                    
+                    <div class="bx--form-item" style="margin-bottom: 2rem;">
+                        <label for="planId" class="bx--label">Select a Plan (This will cancel the current active plan and apply the new one)</label>
+                        <div class="bx--select">
+                            <select id="planId" name="planId" class="bx--select-input" required>
+                                <option value="" disabled selected hidden>Choose a new plan...</option>
+                                @if (ViewBag.Plans != null)
+                                {
+                                    foreach (var item in (SelectList)ViewBag.Plans)
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                }
+                            </select>
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--select__arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path></svg>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Back to Users</a>
+                        <button type="submit" class="bx--btn bx--btn--primary">Assign Selected Plan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Devices / Fingerprints Section -->
+    <div class="bx--row" style="margin-top: 2rem;">
+        <div class="bx--col">
+            <h3 class="bx--type-productive-heading-04" style="margin-bottom: 1rem;">Registered Devices & Logins</h3>
+            <div class="bx--data-table-container">
+                <table class="bx--data-table">
+                    <thead>
+                        <tr>
+                            <th><span class="bx--table-header-label">Date/Time</span></th>
+                            <th><span class="bx--table-header-label">IP Address</span></th>
+                            <th><span class="bx--table-header-label">Fingerprint Hash</span></th>
+                            <th><span class="bx--table-header-label">User Agent</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.Devices != null)
+                        {
+                            var devices = ViewBag.Devices as IEnumerable<NexClone.Backend.Models.DeviceFingerprint>;
+                            if (devices != null && devices.Any())
+                            {
+                                foreach (var device in devices)
+                                {
+                                    <tr>
+                                        <td>@device.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                        <td>@device.IpAddress</td>
+                                        <td><code style="background: #e5e5e5; padding: 2px 4px; border-radius: 4px;">@device.FingerprintHash</code></td>
+                                        <td><span style="display: inline-block; max-width: 400px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="@device.UserAgent">@device.UserAgent</span></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="4" style="text-align: center;">No device records found for this user.</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

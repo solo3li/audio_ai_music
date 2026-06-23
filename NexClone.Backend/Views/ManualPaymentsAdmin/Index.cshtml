@@ -1,0 +1,58 @@
+@model IEnumerable<NexClone.Backend.Models.Payment>
+
+@{
+    ViewData["Title"] = "Pending Manual Payments";
+}
+
+<div class="bx--data-table-container">
+    <div class="bx--data-table-header">
+        <h4 class="bx--data-table-header__title">@ViewData["Title"]</h4>
+        <p class="bx--data-table-header__description">Review and approve or reject manual bank/wallet transfers.</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info mt-3">No pending payments at this time.</div>
+    }
+    else
+    {
+        <table class="bx--data-table">
+            <thead>
+                <tr>
+                    <th>User Email</th>
+                    <th>Plan</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Receipt</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var payment in Model)
+                {
+                    <tr>
+                        <td>@payment.User?.Email</td>
+                        <td>@payment.Plan?.Name</td>
+                        <td>@payment.Amount @payment.Currency</td>
+                        <td>@payment.CreatedAt.ToString("g")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(payment.ReceiptUrl))
+                            {
+                                <span class="bx--tag bx--tag--green">Has Screenshot</span>
+                            }
+                            else
+                            {
+                                <span class="bx--tag bx--tag--gray">No Screenshot</span>
+                            }
+                        </td>
+                        <td>
+                            <a href="@Url.Action("Details", new { id = payment.Id })" class="bx--btn bx--btn--sm bx--btn--secondary">
+                                <i class='bx bx-detail'></i> Details
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

@@ -1,0 +1,81 @@
+@model NexClone.Backend.Models.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<div class="bx--grid bx--grid--full-width">
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <div class="bx--col">
+            <h1 class="bx--type-productive-heading-05">Transaction Details: @Model.PaymentId</h1>
+        </div>
+    </div>
+
+    <div class="bx--row">
+        <div class="bx--col-lg-8" style="margin-bottom: 2rem;">
+            <!-- Payment Information -->
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; height: 100%;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Payment Info</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div><strong>User Email:</strong> @Model.User?.Email</div>
+                    <div><strong>Plan Requested:</strong> @Model.Plan?.Name</div>
+                    <div><strong>Amount Sent:</strong> @Model.Amount @Model.Currency</div>
+                    <div><strong>Date:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</div>
+                    <div><strong>Status:</strong> <span class="bx--tag bx--tag--blue">@Model.Status</span></div>
+                </div>
+
+                <!-- Approval Actions -->
+                @if (Model.Status == "Pending")
+                {
+                    <h3 class="bx--type-productive-heading-02" style="margin-bottom: 1rem; margin-top: 1rem;">Actions</h3>
+                    <div style="display: flex; gap: 1rem;">
+                        <form method="post" asp-action="Approve" asp-route-id="@Model.Id" style="display: inline;">
+                            <button type="submit" class="bx--btn bx--btn--primary" style="background-color: #24a148;">
+                                <i class='bx bx-check'></i> Approve Payment
+                            </button>
+                        </form>
+                        <form method="post" asp-action="Reject" asp-route-id="@Model.Id" style="display: inline;">
+                            <button type="submit" class="bx--btn bx--btn--danger" style="background-color: #da1e28;">
+                                <i class='bx bx-x'></i> Reject Payment
+                            </button>
+                        </form>
+                    </div>
+                }
+                else
+                {
+                    <div style="margin-top: 1rem;">
+                        <strong>Transaction has already been @Model.Status</strong>
+                    </div>
+                }
+
+                <div style="margin-top: 2rem;">
+                    <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Back to List</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="bx--col-lg-8" style="margin-bottom: 2rem;">
+            <!-- Receipt / Screenshot Image -->
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; height: 100%;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Receipt Screenshot</h3>
+                
+                @if (!string.IsNullOrEmpty(Model.ReceiptUrl))
+                {
+                    <div style="text-align: center; border: 1px dashed #ccc; padding: 1rem; background: #fff;">
+                        <img src="@Model.ReceiptUrl" alt="Receipt Screenshot" style="max-width: 100%; max-height: 600px; object-fit: contain;" />
+                    </div>
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="@Model.ReceiptUrl" target="_blank" class="bx--btn bx--btn--ghost bx--btn--sm">Open Image in New Tab</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <p>No screenshot was provided by the user for this transaction.</p>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+@model IEnumerable<NexClone.Backend.Models.EmailTemplate>
+@{
+    ViewData["Title"] = "Email Templates";
+}
+
+<div class="bx--grid">
+    <div class="bx--row mb-4">
+        <div class="bx--col" style="display: flex; justify-content: space-between; align-items: center;">
+            <h2 class="page-title">Email Templates</h2>
+            <a href="@Url.Action("CreateTemplate")" class="bx--btn bx--btn--primary">Create New Template</a>
+        </div>
+    </div>
+
+    <div class="bx--row">
+        <div class="bx--col">
+            <div class="bx--data-table-container">
+                <table class="bx--data-table bx--data-table--zebra">
+                    <thead>
+                        <tr>
+                            <th>Template Name</th>
+                            <th>Subject</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>@item.Name</strong></td>
+                                <td>@item.Subject</td>
+                                <td>@item.UpdatedAt.ToLocalTime().ToString("MMM dd, yyyy HH:mm")</td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="@Url.Action("EditTemplate", new { id = item.Id })" class="bx--btn bx--btn--ghost bx--btn--sm">Edit</a>
+                                        <form asp-action="DeleteTemplate" asp-route-id="@item.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this template?');" style="display:inline;">
+                                            <button type="submit" class="bx--btn bx--btn--danger bx--btn--sm">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 2rem; color: #525252;">
+                                    No email templates found. Create one to get started!
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

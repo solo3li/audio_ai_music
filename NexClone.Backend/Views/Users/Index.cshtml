@@ -1,0 +1,114 @@
+@model IEnumerable<NexClone.Backend.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Users Management";
+}
+
+<div class="bx--grid bx--grid--full-width">
+    <div class="bx--row">
+        <div class="bx--col">
+            <h1 class="bx--type-productive-heading-05" style="margin-bottom: 2rem;">Users Management</h1>
+        </div>
+    </div>
+    
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <div class="bx--col">
+            <form method="get" action="@Url.Action("Index")" style="display: flex; gap: 1rem; align-items: flex-end; background: #ffffff; padding: 1.5rem; border: 1px solid #e0e0e0;">
+                <div class="bx--form-item" style="flex: 1;">
+                    <label for="searchString" class="bx--label">Search User (Email, Phone, ID)</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="searchString" type="text" class="bx--text-input" name="searchString" value="@ViewBag.CurrentSearch" placeholder="Enter email, phone, or ID...">
+                    </div>
+                </div>
+                <div class="bx--form-item" style="flex: 1;">
+                    <label for="planId" class="bx--label">Filter by Plan</label>
+                    <div class="bx--select">
+                        <select id="planId" name="planId" class="bx--select-input" asp-items="ViewBag.Plans">
+                            <option value="">All Plans</option>
+                        </select>
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="bx--select__arrow"><path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path></svg>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="submit" class="bx--btn bx--btn--primary">Search & Filter</button>
+                    @if (!string.IsNullOrEmpty(ViewBag.CurrentSearch) || ViewBag.CurrentPlanId != null)
+                    {
+                        <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Clear</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="bx--row">
+        <div class="bx--col">
+            <!-- Carbon UI Data Table -->
+            <div class="bx--data-table-container" data-table>
+                <div class="bx--data-table-header">
+                    <h4 class="bx--data-table-header__title">All Registered Users</h4>
+                    <p class="bx--data-table-header__description">Manage users and their status</p>
+                </div>
+
+                <table class="bx--data-table">
+                    <thead>
+                        <tr>
+                            <th><span class="bx--table-header-label">Email</span></th>
+                            <th><span class="bx--table-header-label">Country</span></th>
+                            <th><span class="bx--table-header-label">Credits</span></th>
+                            <th><span class="bx--table-header-label">Current Plan</span></th>
+                            <th><span class="bx--table-header-label">Role</span></th>
+                            <th><span class="bx--table-header-label">Joined</span></th>
+                            <th><span class="bx--table-header-label">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 2rem;">
+                                    <p class="bx--type-productive-heading-03">No users found in the database.</p>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var user in Model)
+                            {
+                                var currentSub = user.Subscriptions?.FirstOrDefault(s => s.Status == "active");
+                                <tr>
+                                    <td>@user.Email</td>
+                                    <td>@user.Country</td>
+                                    <td>@user.AvailableCredits</td>
+                                    <td>
+                                        @if (currentSub?.Plan != null)
+                                        {
+                                            <span class="bx--tag bx--tag--green">@currentSub.Plan.Name</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bx--tag bx--tag--gray">None</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (user.IsStaff)
+                                        {
+                                            <span class="bx--tag bx--tag--purple">Admin</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bx--tag bx--tag--blue">User</span>
+                                        }
+                                    </td>
+                                    <td>@user.CreatedAt.ToString("MMM dd, yyyy")</td>
+                                    <td>
+                                        <a href="@Url.Action("Details", new { id = user.Id })" class="bx--btn bx--btn--ghost bx--btn--sm">View Details</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

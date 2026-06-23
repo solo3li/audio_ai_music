@@ -1,0 +1,65 @@
+@model IEnumerable<NexClone.Backend.Models.ToolConfiguration>
+
+<div class="bx--grid" style="padding-left: 0;">
+    <div class="bx--row" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0; font-weight: 400; font-size: 1.5rem;">@ViewData["Title"]</h2>
+        <a href="@Url.Action("Create")" class="bx--btn bx--btn--primary">
+            Add Tool Config
+            <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--btn__icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M9 7L9 3 7 3 7 7 3 7 3 9 7 9 7 13 9 13 9 9 13 9 13 7z"></path></svg>
+        </a>
+    </div>
+
+    <div class="bx--row">
+        <div class="bx--col">
+            <div class="bx--data-table-container">
+                <table class="bx--data-table bx--data-table--zebra">
+                    <thead>
+                        <tr>
+                            <th><span class="bx--table-header-label">Tool Name</span></th>
+                            <th><span class="bx--table-header-label">Provider Name</span></th>
+                            <th><span class="bx--table-header-label">Model Name</span></th>
+                            <th><span class="bx--table-header-label">Status</span></th>
+                            <th><span class="bx--table-header-label">Last Updated</span></th>
+                            <th><span class="bx--table-header-label">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><strong>@item.ToolName</strong></td>
+                                <td>@item.ProviderName</td>
+                                <td>@(string.IsNullOrEmpty(item.ModelName) ? "Default" : item.ModelName)</td>
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span style="color: #24a148; font-weight: 600;">Active</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="color: #da1e28;">Inactive</span>
+                                    }
+                                </td>
+                                <td>@item.UpdatedAt.ToString("g")</td>
+                                <td>
+                                    <div style="display: flex; gap: 0.5rem;">
+                                        <a href="@Url.Action("Edit", new { id = item.Id })" class="bx--btn bx--btn--sm bx--btn--ghost">Edit</a>
+                                        <form action="@Url.Action("Delete", new { id = item.Id })" method="post" onsubmit="return confirm('Are you sure you want to delete this configuration?');">
+                                            <button type="submit" class="bx--btn bx--btn--sm bx--btn--danger">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                @if (!Model.Any())
+                {
+                    <div style="text-align: center; padding: 2rem; color: #525252; background: #ffffff; border-bottom: 1px solid #e0e0e0;">
+                        No configurations found. Add one to customize a tool.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

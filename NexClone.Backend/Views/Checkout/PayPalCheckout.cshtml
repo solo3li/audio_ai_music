@@ -1,0 +1,13 @@
+@{
+    ViewData["Title"] = "PayPal Checkout";
+    Layout = "_Layout";
+}
+
+<div class="container mt-5 text-center">
+    <h2>Complete your payment with PayPal</h2>
+    <p>You will be redirected to PayPal to complete your transaction securely.</p>
+    
+    <a href="@ViewData["CheckoutUrl"]" class="btn btn-primary btn-lg mt-3">
+        <i class="bi bi-paypal"></i> Pay with PayPal
+    </a>
+</div>

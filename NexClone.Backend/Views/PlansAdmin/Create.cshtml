@@ -1,0 +1,138 @@
+@model NexClone.Backend.Models.Plan
+
+<div class="bx--grid" style="padding-left: 0; max-width: 800px; margin-left: 0;">
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <h2 style="margin: 0; font-weight: 400; font-size: 1.5rem;">@ViewData["Title"]</h2>
+    </div>
+
+    <form action="@Url.Action("Create")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0;">
+        @Html.AntiForgeryToken()
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div class="bx--form-item">
+                <label for="Name" class="bx--label">Plan Name</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="Name" type="text" class="bx--text-input" name="Name" required value="@Model?.Name">
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="DurationDays" class="bx--label">Duration (Days)</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="DurationDays" type="number" class="bx--text-input" name="DurationDays" required min="1" value="@(Model?.DurationDays ?? 30)">
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="GracePeriodDays" class="bx--label">Grace Period (Days)</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="GracePeriodDays" type="number" class="bx--text-input" name="GracePeriodDays" required min="0" value="@(Model?.GracePeriodDays ?? 3)">
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="bx--form-item">
+                <label for="PriceUsd" class="bx--label">Price (USD)</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="PriceUsd" type="number" class="bx--text-input" name="PriceUsd" required min="0" step="0.01" value="@(Model?.PriceUsd ?? 0)">
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="PriceEgp" class="bx--label">Price (EGP)</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="PriceEgp" type="number" class="bx--text-input" name="PriceEgp" required min="0" step="0.01" value="@(Model?.PriceEgp ?? 0)">
+                </div>
+            </div>
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #e0e0e0; margin-bottom: 2rem;">
+        <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.25rem;">Economy Limits</h4>
+
+        <div style="margin-bottom: 2rem;">
+            <div class="bx--form-item">
+                <label for="MonthlyCredits" class="bx--label">Monthly Credits</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="MonthlyCredits" type="number" class="bx--text-input" name="MonthlyCredits" required min="0" step="0.01" value="@(Model?.MonthlyCredits ?? 0)">
+                </div>
+                <div class="bx--form__helper-text">Credits granted per month</div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.1rem;">Text-to-Voice (TTS) Settings</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; background: #f4f4f4; padding: 1.5rem;">
+            <div class="bx--form-item">
+                <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
+                    <input type="hidden" name="TtsEnabled" value="false" />
+                    <input type="checkbox" id="TtsEnabled" name="TtsEnabled" value="true" class="bx--checkbox" @(Model?.TtsEnabled != false ? "checked" : "") style="cursor: pointer;" />
+                    <label for="TtsEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable TTS</label>
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="TtsMaxCharsPerRequest" class="bx--label">Max Chars per request</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="TtsMaxCharsPerRequest" type="number" class="bx--text-input" name="TtsMaxCharsPerRequest" required min="-1" value="@(Model?.TtsMaxCharsPerRequest ?? 3000)">
+                </div>
+                <div class="bx--form__helper-text">-1 for unlimited</div>
+            </div>
+            <div class="bx--form-item">
+                <label for="TtsCharactersBlock" class="bx--label">Characters Block Size</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="TtsCharactersBlock" type="number" class="bx--text-input" name="TtsCharactersBlock" required min="1" value="@(Model?.TtsCharactersBlock ?? 1000)">
+                </div>
+                <div class="bx--form__helper-text">Cost will be calculated per this amount</div>
+            </div>
+            <div class="bx--form-item">
+                <label for="TtsCostPerChar" class="bx--label">Cost per Block</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="TtsCostPerChar" type="number" class="bx--text-input" name="TtsCostPerChar" required min="0" step="0.0001" value="@(Model?.TtsCostPerChar ?? 1.0m)">
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
+                    <input type="hidden" name="TtsCustomInstructionsEnabled" value="false" />
+                    <input type="checkbox" id="TtsCustomInstructionsEnabled" name="TtsCustomInstructionsEnabled" value="true" class="bx--checkbox" @(Model?.TtsCustomInstructionsEnabled == true ? "checked" : "") style="cursor: pointer;" />
+                    <label for="TtsCustomInstructionsEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable Custom Instructions</label>
+                </div>
+            </div>
+        </div>
+
+        <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.1rem;">Voice-to-Text (STT) Settings</h4>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-bottom: 2.5rem; background: #f4f4f4; padding: 1.5rem;">
+            <div class="bx--form-item">
+                <div style="display: flex; align-items: center; gap: 0.5rem; height: 100%;">
+                    <input type="hidden" name="SttEnabled" value="false" />
+                    <input type="checkbox" id="SttEnabled" name="SttEnabled" value="true" class="bx--checkbox" @(Model?.SttEnabled != false ? "checked" : "") style="cursor: pointer;" />
+                    <label for="SttEnabled" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Enable STT</label>
+                </div>
+            </div>
+            <div class="bx--form-item">
+                <label for="SttMaxFileSizeMb" class="bx--label">Max File Size (MB)</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="SttMaxFileSizeMb" type="number" class="bx--text-input" name="SttMaxFileSizeMb" required min="-1" value="@(Model?.SttMaxFileSizeMb ?? 25)">
+                </div>
+                <div class="bx--form__helper-text">-1 for unlimited</div>
+            </div>
+            <div class="bx--form-item">
+                <label for="SttCostPerMinute" class="bx--label">Cost per Minute</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="SttCostPerMinute" type="number" class="bx--text-input" name="SttCostPerMinute" required min="0" step="0.0001" value="@(Model?.SttCostPerMinute ?? 1.0m)">
+                </div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div class="bx--form-item">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="hidden" name="IsFreeTrial" value="false" />
+                    <input type="checkbox" id="IsFreeTrial" name="IsFreeTrial" value="true" class="bx--checkbox" @(Model?.IsFreeTrial == true ? "checked" : "") style="cursor: pointer;" />
+                    <label for="IsFreeTrial" class="bx--checkbox-label" style="cursor: pointer; margin: 0; font-weight: bold;">Is this a Free Trial plan?</label>
+                </div>
+                <div class="bx--form__helper-text">If checked, this plan will be automatically assigned to new users upon registration.</div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+            <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Cancel</a>
+            <button type="submit" class="bx--btn bx--btn--primary">Save Plan</button>
+        </div>
+    </form>
+</div>

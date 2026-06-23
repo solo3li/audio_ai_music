@@ -1,0 +1,40 @@
+@model IEnumerable<NexClone.Backend.Models.ManualPaymentMethod>
+
+<div class="table-header">
+    <a href="/ManualPaymentMethodsAdmin/Create" class="btn btn-primary" hx-boost="true">Add Payment Method</a>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="bx--data-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Account Details</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.AccountDetails</td>
+                        <td>
+                            <span class="badge @(item.IsActive ? "badge-success" : "badge-danger")">
+                                @(item.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </td>
+                        <td class="table-actions">
+                            <a href="/ManualPaymentMethodsAdmin/Edit/@item.Id" class="btn btn-secondary btn-sm" hx-boost="true">Edit</a>
+                            <form action="/ManualPaymentMethodsAdmin/Delete/@item.Id" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this payment method?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

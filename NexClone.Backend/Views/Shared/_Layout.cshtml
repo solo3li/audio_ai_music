@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - NexClone Admin</title>
+    <!-- Carbon Design System CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/carbon-components/css/carbon-components.min.css">
+    <!-- Boxicons for Modern Icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- HTMX for SPA-like navigation -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <style>
+        /* Modern Sidebar Theme Overrides */
+        :root {
+            --admin-bg: #f4f7f6;
+            --sidebar-bg: #161616;
+            --sidebar-text: #f4f4f4;
+            --sidebar-hover: #393939;
+            --primary-color: #0f62fe;
+        }
+
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: var(--admin-bg); 
+            font-family: 'IBM Plex Sans', 'Helvetica Neue', Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styling */
+        .modern-sidebar {
+            width: 256px;
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 10000;
+            box-shadow: 4px 0 16px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid #393939;
+        }
+
+        .sidebar-header i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .sidebar-brand {
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .sidebar-nav {
+            padding: 1.5rem 0;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* Custom Scrollbar for Sidebar */
+        .sidebar-nav::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar-nav::-webkit-scrollbar-track {
+            background: var(--sidebar-bg);
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background: #393939;
+            border-radius: 4px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb:hover {
+            background: #525252;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu-item a {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #c6c6c6;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .sidebar-menu-item a i {
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+
+        .sidebar-menu-item a:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .sidebar-menu-item.active a {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+            border-left-color: var(--primary-color);
+        }
+
+        .sidebar-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #393939;
+            font-size: 0.75rem;
+            color: #8d8d8d;
+        }
+
+        /* Main Content Area */
+        .bx--content { 
+            margin-left: 256px; /* Offset for sidebar */
+            padding: 2.5rem; 
+            width: calc(100% - 256px);
+            min-height: 100vh;
+        }
+
+        /* Modernizing the Carbon Content */
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #161616;
+            margin: 0;
+        }
+    </style>
+</head>
+<body hx-boost="true">
+    
+    <!-- Modern Dark Sidebar -->
+    <aside class="modern-sidebar">
+        <div class="sidebar-header">
+            <i class='bx bxl-xing'></i>
+            <a href="/" class="sidebar-brand">NexClone</a>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item active">
+                    <a href="/">
+                        <i class='bx bx-grid-alt'></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/Users">
+                        <i class='bx bx-user'></i>
+                        Users Management
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/Subscriptions">
+                        <i class='bx bx-credit-card-front'></i>
+                        Subscriptions
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="@Url.Action("Index", "PlansAdmin")">
+                        <i class='bx bx-layer'></i>
+                        Pricing &amp; Plans
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="@Url.Action("Index", "ToolConfigAdmin")">
+                        <i class='bx bx-slider-alt'></i>
+                        Tool Settings
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="@Url.Action("Index", "SettingsAdmin")">
+                        <i class='bx bx-cog'></i>
+                        Global Settings
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="@Url.Action("Index", "HistoryAdmin")">
+                        <i class='bx bx-history'></i>
+                        Operations History
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="@Url.Action("Index", "LogsAdmin")">
+                        <i class='bx bx-terminal'></i>
+                        System Logs
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/Voices">
+                        <i class='bx bx-microphone'></i>
+                        AI Voices
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/PaymentConfigAdmin">
+                        <i class='bx bx-credit-card-alt'></i>
+                        Payment Gateways
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/Settings">
+                        <i class='bx bx-cog'></i>
+                        Settings
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/ApiConfigAdmin">
+                        <i class='bx bx-key'></i>
+                        API Keys
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/MailingAdmin">
+                        <i class='bx bx-envelope'></i>
+                        Mailing &amp; Emails
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/ManualPaymentsAdmin">
+                        <i class='bx bx-receipt'></i>
+                        Pending Payments
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="/ManualPaymentMethodsAdmin">
+                        <i class='bx bx-wallet'></i>
+                        Payment Methods
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            &copy; 2026 NexClone Admin
+        </div>
+    </aside>
+
+    <!-- Main Content Area where HTMX will load pages -->
+    <main class="bx--content" id="main-content">
+        <div class="page-header">
+            <h1 class="page-title">@ViewData["Title"]</h1>
+        </div>
+        
+        <!-- Flash messages or notifications could go here -->
+
+        @RenderBody()
+    </main>
+
+    <!-- Carbon Design System JS -->
+    <script src="https://unpkg.com/carbon-components/scripts/carbon-components.min.js"></script>
+    
+    <!-- Active Link Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname;
+            const menuItems = document.querySelectorAll('.sidebar-menu-item');
+            
+            menuItems.forEach(item => {
+                const link = item.querySelector('a');
+                if (link.getAttribute('href') === currentPath) {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+        });
+
+        // Update active link on HTMX navigation
+        document.body.addEventListener('htmx:afterOnLoad', function(event) {
+            const currentPath = new URL(event.detail.xhr.responseURL).pathname;
+            const menuItems = document.querySelectorAll('.sidebar-menu-item');
+            
+            menuItems.forEach(item => {
+                const link = item.querySelector('a');
+                if (link.getAttribute('href') === currentPath) {
+                    menuItems.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

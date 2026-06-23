@@ -1,0 +1,123 @@
+@model NexClone.Backend.Models.PaymentGatewayConfig
+
+<div class="bx--grid" style="padding-left: 0; max-width: 800px; margin-left: 0;">
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <h2 style="margin: 0; font-weight: 400; font-size: 1.5rem;">@ViewData["Title"]</h2>
+    </div>
+
+    <form action="@Url.Action("Edit")" method="post" style="background: #ffffff; padding: 2rem; border: 1px solid #e0e0e0;">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="bx--form-item" style="margin-bottom: 2rem;">
+            <label for="ProviderName" class="bx--label">Provider Name</label>
+            <div class="bx--select">
+                <select id="ProviderName" class="bx--select-input" name="ProviderName" required onchange="toggleFields()">
+                    @if(Model?.ProviderName == "Paymob") { <option class="bx--select-option" value="Paymob" selected>Paymob</option> } else { <option class="bx--select-option" value="Paymob">Paymob</option> }
+                    @if(Model?.ProviderName == "PayPal") { <option class="bx--select-option" value="PayPal" selected>PayPal</option> } else { <option class="bx--select-option" value="PayPal">PayPal</option> }
+                </select>
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--select__arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path></svg>
+            </div>
+        </div>
+
+        <div id="paymob-fields" style="display: none;">
+            <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.25rem;">Paymob Settings</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="bx--form-item">
+                    <label for="PublicKey" class="bx--label">Public Key</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="PublicKey" type="text" class="bx--text-input" name="PublicKey" value="@Model.PublicKey">
+                    </div>
+                </div>
+                <div class="bx--form-item">
+                    <label for="SecretKey" class="bx--label">Secret Key</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="SecretKey" type="text" class="bx--text-input" name="SecretKey" value="@Model.SecretKey">
+                    </div>
+                </div>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="bx--form-item">
+                    <label for="HmacSecret" class="bx--label">HMAC Secret</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="HmacSecret" type="text" class="bx--text-input" name="HmacSecret" value="@Model.HmacSecret">
+                    </div>
+                </div>
+                <div class="bx--form-item">
+                    <label for="IntegrationId" class="bx--label">Integration ID</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="IntegrationId" type="text" class="bx--text-input" name="IntegrationId" value="@Model.IntegrationId">
+                    </div>
+                </div>
+                <div class="bx--form-item">
+                    <label for="IframeId" class="bx--label">Iframe ID</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="IframeId" type="text" class="bx--text-input" name="IframeId" value="@Model.IframeId">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="paypal-fields" style="display: none;">
+            <h4 style="margin-bottom: 1.5rem; font-weight: 400; font-size: 1.25rem;">PayPal Settings</h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="bx--form-item">
+                    <label for="ClientId" class="bx--label">Client ID</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="ClientId" type="text" class="bx--text-input" name="ClientId" value="@Model.ClientId">
+                    </div>
+                </div>
+                <div class="bx--form-item">
+                    <label for="ClientSecret" class="bx--label">Client Secret</label>
+                    <div class="bx--text-input__field-wrapper">
+                        <input id="ClientSecret" type="text" class="bx--text-input" name="ClientSecret" value="@Model.ClientSecret">
+                    </div>
+                </div>
+            </div>
+            <div class="bx--form-item" style="margin-bottom: 2rem;">
+                <label for="ApiBase" class="bx--label">API Base URL</label>
+                <div class="bx--select">
+                    <select id="ApiBase" class="bx--select-input" name="ApiBase">
+                        @if(Model.ApiBase == "https://api-m.sandbox.paypal.com") { <option class="bx--select-option" value="https://api-m.sandbox.paypal.com" selected>Sandbox (Testing)</option> } else { <option class="bx--select-option" value="https://api-m.sandbox.paypal.com">Sandbox (Testing)</option> }
+                        @if(Model.ApiBase == "https://api-m.paypal.com") { <option class="bx--select-option" value="https://api-m.paypal.com" selected>Live (Production)</option> } else { <option class="bx--select-option" value="https://api-m.paypal.com">Live (Production)</option> }
+                    </select>
+                    <svg focusable="false" preserveAspectRatio="xMidYMid meet" style="will-change: transform;" xmlns="http://www.w3.org/2000/svg" class="bx--select__arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="bx--form-item bx--checkbox-wrapper" style="margin-bottom: 2rem;">
+            <input id="IsActive" class="bx--checkbox" type="checkbox" value="true" name="IsActive" @(Model.IsActive ? "checked" : "")>
+            <label for="IsActive" class="bx--checkbox-label" title="Active Status">
+                <span class="bx--checkbox-label-text">Set as Active Configuration</span>
+            </label>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+            <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Cancel</a>
+            <button type="submit" class="bx--btn bx--btn--primary">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function toggleFields() {
+        var provider = document.getElementById("ProviderName").value;
+        var paymobFields = document.getElementById("paymob-fields");
+        var paypalFields = document.getElementById("paypal-fields");
+
+        if (provider === "Paymob") {
+            paymobFields.style.display = "block";
+            paypalFields.style.display = "none";
+        } else if (provider === "PayPal") {
+            paymobFields.style.display = "none";
+            paypalFields.style.display = "block";
+        } else {
+            paymobFields.style.display = "none";
+            paypalFields.style.display = "none";
+        }
+    }
+
+    // Call on load
+    window.onload = toggleFields;
+</script>

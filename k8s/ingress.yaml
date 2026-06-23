@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: nexclone-frontend
+subsets:
+  - addresses:
+      - ip: 178.62.192.74
+    ports:
+      - port: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexclone-frontend
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: nexclone-backend
+subsets:
+  - addresses:
+      - ip: 178.62.192.74
+    ports:
+      - port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nexclone-backend
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nexclone-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    # Ensure all HTTP redirects to HTTPS automatically (often done by default by cert-manager/traefik, but good to be safe)
+    ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  rules:
+    - host: 178.62.192.74.nip.io
+      http:
+        paths:
+          # Backend paths
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: nexclone-backend
+                port:
+                  number: 8080
+          - path: /swagger
+            pathType: Prefix
+            backend:
+              service:
+                name: nexclone-backend
+                port:
+                  number: 8080
+          - path: /scalar
+            pathType: Prefix
+            backend:
+              service:
+                name: nexclone-backend
+                port:
+                  number: 8080
+          # Frontend paths
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nexclone-frontend
+                port:
+                  number: 3000
+  tls:
+    - hosts:
+        - 178.62.192.74.nip.io
+      secretName: nexclone-tls-prod

@@ -1,0 +1,99 @@
+@model NexClone.Backend.Models.GenerationHistory
+
+@{
+    ViewData["Title"] = "Operation Details";
+}
+
+<div class="bx--grid bx--grid--full-width">
+    <div class="bx--row" style="margin-bottom: 2rem;">
+        <div class="bx--col">
+            <h1 class="bx--type-productive-heading-05">Operation Details: @Model.Title</h1>
+        </div>
+    </div>
+
+    <div class="bx--row">
+        <!-- Overview Card -->
+        <div class="bx--col-lg-8" style="margin-bottom: 2rem;">
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; height: 100%;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">Overview</h3>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                    <div><strong>User Email:</strong> @Model.User?.Email</div>
+                    <div><strong>Tool/Type:</strong> <span class="bx--tag bx--tag--blue">@Model.Type</span></div>
+                    <div><strong>Status:</strong> 
+                        @if (Model.Status == "completed") {
+                            <span style="color: green; font-weight: bold;">@Model.Status</span>
+                        } else if (Model.Status == "failed") {
+                            <span style="color: red; font-weight: bold;">@Model.Status</span>
+                        } else {
+                            <span style="color: orange; font-weight: bold;">@Model.Status</span>
+                        }
+                    </div>
+                    <div><strong>Date:</strong> @Model.CreatedAt.ToString("MMM dd, yyyy HH:mm")</div>
+                    <div><strong>Credits Used:</strong> @Model.CreditsUsed</div>
+                    <div><strong>Duration:</strong> @Model.Duration</div>
+                    <div><strong>Language:</strong> @Model.Lang</div>
+                    <div><strong>Voice:</strong> @Model.Voice</div>
+                </div>
+
+                <div style="margin-top: 2rem;">
+                    <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Back to History</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Inputs / Outputs -->
+        <div class="bx--col-lg-8" style="margin-bottom: 2rem;">
+            <div style="background: #f4f4f4; padding: 2rem; border: 1px solid #e0e0e0; height: 100%;">
+                <h3 class="bx--type-productive-heading-03" style="margin-bottom: 1.5rem; margin-top: 0;">I/O Details</h3>
+
+                @if (!string.IsNullOrEmpty(Model.InputText))
+                {
+                    <div style="margin-bottom: 1.5rem;">
+                        <strong>Input Text:</strong>
+                        <div style="background: #fff; padding: 1rem; border: 1px solid #ccc; margin-top: 0.5rem; white-space: pre-wrap;">@Model.InputText</div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.ResultText))
+                {
+                    <div style="margin-bottom: 1.5rem;">
+                        <strong>Result Text:</strong>
+                        <div style="background: #fff; padding: 1rem; border: 1px solid #ccc; margin-top: 0.5rem; white-space: pre-wrap;">@Model.ResultText</div>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.FileUrl))
+                {
+                    <div style="margin-bottom: 1.5rem;">
+                        <strong>Generated / Input File:</strong>
+                        <div style="margin-top: 0.5rem;">
+                            @if (Model.FileUrl.EndsWith(".mp3") || Model.FileUrl.EndsWith(".wav") || Model.Type.Contains("voice") || Model.Type.Contains("tts"))
+                            {
+                                <audio controls style="width: 100%;">
+                                    <source src="@Model.FileUrl" type="audio/mpeg">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            }
+                            else if (Model.FileUrl.EndsWith(".png") || Model.FileUrl.EndsWith(".jpg") || Model.FileUrl.EndsWith(".jpeg") || Model.Type.Contains("img"))
+                            {
+                                <img src="@Model.FileUrl" style="max-width: 100%; border: 1px solid #ccc;" alt="Generated Image" />
+                            }
+                            
+                            <div style="margin-top: 1rem;">
+                                <a href="@Model.FileUrl" target="_blank" class="bx--btn bx--btn--sm bx--btn--ghost">Open File</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+                
+                @if (string.IsNullOrEmpty(Model.InputText) && string.IsNullOrEmpty(Model.ResultText) && string.IsNullOrEmpty(Model.FileUrl))
+                {
+                    <div class="alert alert-warning">
+                        No input/output data available for this operation.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

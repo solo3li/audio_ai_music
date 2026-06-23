@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Secure Checkout";
+    Layout = null; // We can use a clean layout or embed it inside the admin panel. Let's use a standalone clean page.
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Checkout - NexClone</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .checkout-container {
+            width: 100%;
+            max-width: 600px;
+            height: 80vh;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .header {
+            padding: 1rem;
+            background: #161616;
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+        .iframe-wrapper {
+            flex: 1;
+            width: 100%;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .footer {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #8d8d8d;
+            background: #ffffff;
+            border-top: 1px solid #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="checkout-container">
+        <div class="header">
+            Secure Payment (Paymob)
+        </div>
+        <div class="iframe-wrapper">
+            <iframe id="paymob-iframe" src="@ViewData["CheckoutUrl"]" allow="payment *"></iframe>
+        </div>
+        <div class="footer">
+            <a href="/PlansAdmin" style="color: #0f62fe; text-decoration: none;">&larr; Back to Plans</a>
+            <br>
+            Secured by Paymob &copy; 2026
+        </div>
+    </div>
+
+</body>
+</html>

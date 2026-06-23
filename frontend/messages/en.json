@@ -1,0 +1,469 @@
+{
+  "Hero": {
+    "badge": "NexMedia AI Version 2.0",
+    "title": "The Future of AI is in Your Hands",
+    "subtitle": "Advanced AI tools for audio and text conversion, background removal, and more",
+    "ctaPrimary": "Start for Free Now",
+    "ctaSecondary": "See How It Works",
+    "highlights": "Fast • Accurate • Professional",
+    "stats": {
+      "users": {
+        "value": "50k+",
+        "label": "Active Users"
+      },
+      "uptime": {
+        "value": "99.9%",
+        "label": "Uptime"
+      },
+      "tools": {
+        "value": "12+",
+        "label": "AI Tools"
+      }
+    },
+    "scrollDown": "Scroll Down"
+  },
+  "Tools": {
+    "badge": "Toolbox",
+    "title": "Everything You Need in One Place",
+    "subtitle": "A comprehensive suite of advanced AI tools designed to save you time and elevate your productivity.",
+    "startUsing": "Start Using Now",
+    "useTool": "Use Tool",
+    "list": {
+      "t1": {
+        "title": "Audio to Text",
+        "desc": "Transcribe any audio file to highly accurate text supporting over 50 languages.",
+        "badge": "Popular",
+        "tags": [
+          "Voice",
+          "Text",
+          "AI"
+        ]
+      },
+      "t2": {
+        "title": "Text to Audio",
+        "desc": "Convert text into natural, realistic human voices with varied emotions.",
+        "badge": "New",
+        "tags": [
+          "TTS",
+          "Voiceover"
+        ]
+      },
+      "t3": {
+        "title": "Background Removal",
+        "desc": "Remove image backgrounds flawlessly with one click using AI.",
+        "badge": "Fast",
+        "tags": [
+          "Images",
+          "Design"
+        ]
+      },
+      "t4": {
+        "title": "Smart Translation",
+        "desc": "Accurate, context-aware translation supporting diverse languages and dialects.",
+        "badge": "",
+        "tags": [
+          "Language",
+          "Text"
+        ]
+      },
+      "t5": {
+        "title": "Video Processing",
+        "desc": "Enhance video quality and generate automatic captions.",
+        "badge": "Beta",
+        "tags": [
+          "Video",
+          "Media"
+        ]
+      },
+      "t6": {
+        "title": "Audio Enhancement",
+        "desc": "Remove background noise and enhance audio quality like a studio.",
+        "badge": "",
+        "tags": [
+          "Audio",
+          "Studio"
+        ]
+      },
+      "t7": {
+        "title": "Smart Writing",
+        "desc": "Generate creative articles, marketing copy, and emails in seconds.",
+        "badge": "",
+        "tags": [
+          "Writing",
+          "GPT"
+        ]
+      },
+      "t8": {
+        "title": "Text Extraction (OCR)",
+        "desc": "Extract text from images and PDF documents easily.",
+        "badge": "",
+        "tags": [
+          "OCR",
+          "Documents"
+        ]
+      },
+      "t9": {
+        "title": "Music Generation",
+        "desc": "Create royalty-free music tailored to your specific mood and style.",
+        "badge": "New",
+        "tags": [
+          "Audio",
+          "Music"
+        ]
+      }
+    }
+  },
+  "Navbar": {
+    "logo": "NexMedia",
+    "home": "Home",
+    "tools": "Tools",
+    "pricing": "Pricing",
+    "reviews": "Reviews",
+    "login": "Log In",
+    "startNow": "Start for Free",
+    "account": "My Account"
+  },
+  "MarqueeBanner": {
+    "items": [
+      "Audio to Text",
+      "Text to Audio",
+      "Background Removal",
+      "Smart Translation",
+      "Audio Enhancement",
+      "Music Generation",
+      "Text Extraction",
+      "Smart Writing",
+      "Video Processing"
+    ]
+  },
+  "HowItWorks": {
+    "badge": "How It Works",
+    "title": "Three Simple Steps",
+    "subtitle": "From upload to result in seconds",
+    "steps": {
+      "s1": {
+        "step": "01",
+        "title": "Upload your file",
+        "desc": "Drag and drop or select a file from your device. We support all common formats."
+      },
+      "s2": {
+        "step": "02",
+        "title": "Select the tool",
+        "desc": "Choose from over 12 specialized AI tools tailored to your needs."
+      },
+      "s3": {
+        "step": "03",
+        "title": "Get the result",
+        "desc": "Professional results ready for immediate download at the highest quality."
+      }
+    }
+  },
+  "Features": {
+    "badge": "Why NexMedia?",
+    "title": "Unmatched Features",
+    "subtitle": "Designed to be the best in every detail",
+    "list": {
+      "f1": {
+        "title": "Ultra-fast Processing",
+        "desc": "Instant results in less than a second thanks to advanced infrastructure."
+      },
+      "f2": {
+        "title": "Total Security & Privacy",
+        "desc": "Your data is protected with military-grade encryption and never used for other purposes."
+      },
+      "f3": {
+        "title": "Multi-language Support",
+        "desc": "Over 100 supported languages, including full Arabic dialect support."
+      },
+      "f4": {
+        "title": "Advanced GPT Tech",
+        "desc": "We use the latest AI models to ensure the highest possible accuracy."
+      },
+      "f5": {
+        "title": "Save 90% of Time",
+        "desc": "What used to take hours now takes mere seconds."
+      },
+      "f6": {
+        "title": "Analytics & Reports",
+        "desc": "Track your usage and view detailed statistics for every tool."
+      },
+      "f7": {
+        "title": "Developer API",
+        "desc": "Integrate our tools into your apps easily via a professional documented API."
+      },
+      "f8": {
+        "title": "Continuous Updates",
+        "desc": "We add new tools and features constantly at no extra charge."
+      }
+    },
+    "stats": {
+      "s1": {
+        "val": "97%",
+        "label": "Conversion Accuracy"
+      },
+      "s2": {
+        "val": "<1 s",
+        "label": "Avg Processing"
+      },
+      "s3": {
+        "val": "24/7",
+        "label": "Continuous Support"
+      },
+      "s4": {
+        "val": "500+",
+        "label": "Enterprise Users"
+      }
+    }
+  },
+  "Pricing": {
+    "badge": "Pricing Plans",
+    "title": "Choose Your Perfect Plan",
+    "subtitle": "All plans include a 14-day money-back guarantee",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "save": "Save 15%",
+    "freePlan": {
+      "name": "Free",
+      "currency": "$",
+      "period": "Forever",
+      "desc": "To get started and try",
+      "price": {
+        "monthly": "0",
+        "yearly": "0"
+      },
+      "features": [
+        "100 minutes audio/month",
+        "5000 words text generation",
+        "10 background removals",
+        "Limited translation",
+        "Email support"
+      ],
+      "notIncluded": [
+        "API",
+        "Batch processing",
+        "Priority processing"
+      ],
+      "button": "Start for Free"
+    },
+    "proPlan": {
+      "name": "Pro",
+      "currency": "$",
+      "period": "/ month",
+      "desc": "For individuals and pros",
+      "price": {
+        "monthly": "19.99",
+        "yearly": "16.99"
+      },
+      "features": [
+        "2000 minutes audio/month",
+        "Unlimited text",
+        "300 background removals",
+        "Full translation 100+ lang",
+        "Smart writing",
+        "Audio enhancement",
+        "Priority support",
+        "Limited API"
+      ],
+      "notIncluded": [
+        "Batch processing"
+      ],
+      "button": "Subscribe Now",
+      "popular": "Most Popular"
+    },
+    "enterprisePlan": {
+      "name": "Enterprise",
+      "currency": "$",
+      "period": "/ month",
+      "desc": "For large teams",
+      "price": {
+        "monthly": "49.99",
+        "yearly": "39.99"
+      },
+      "features": [
+        "Unlimited audio & text",
+        "Unlimited images",
+        "All tools unlocked",
+        "Batch processing",
+        "Full API + Webhooks",
+        "Advanced dashboard",
+        "Detailed reports",
+        "Dedicated account manager",
+        "24/7 instant support"
+      ],
+      "notIncluded": [],
+      "button": "Subscribe Now"
+    },
+    "note": "No hidden fees · Cancel anytime · Secure SSL payment"
+  },
+  "Testimonials": {
+    "badge": "User Reviews",
+    "title": "Trusted by over 50,000 users",
+    "subtitle": "Read what our clients say about their experience",
+    "reviews": {
+      "r1": {
+        "text": "\"The background removal tool is very professional. The results are 10 times better than tools at 10x the price. My whole team moved to this platform.\"",
+        "author": "Sarah Ibrahim",
+        "role": "Marketing Manager - Tech Startup"
+      },
+      "r2": {
+        "text": "\"The API is very easy to integrate into my projects. The documentation is excellent and the speed is incredible. I highly recommend it for any developer.\"",
+        "author": "Mohammad Al-Omari",
+        "role": "Software Developer - Freelancer"
+      },
+      "r3": {
+        "text": "\"The Arabic text-to-speech accuracy is the best I've tried. The voices sound incredibly natural and not robotic like other tools.\"",
+        "author": "Ahmad Hassan",
+        "role": "Content Creator"
+      }
+    }
+  },
+  "CTA": {
+    "title": "Ready to Multiply Your Productivity?",
+    "subtitle": "Join thousands of professionals who have revolutionized how they work using NexMedia AI.",
+    "button": "Start Your Free Trial Now",
+    "features": [
+      "No credit card required",
+      "Free 14-day trial",
+      "Cancel anytime"
+    ]
+  },
+  "Footer": {
+    "desc": "The first comprehensive Arabic platform for artificial intelligence tools. We empower creators and businesses with advanced tools to boost productivity and creativity.",
+    "products": {
+      "title": "Products",
+      "links": [
+        "Audio to Text",
+        "Background Removal",
+        "Smart Translation",
+        "Music Generation",
+        "API"
+      ]
+    },
+    "company": {
+      "title": "Company",
+      "links": [
+        "About Us",
+        "Careers",
+        "Blog",
+        "Contact Us",
+        "Partners"
+      ]
+    },
+    "legal": {
+      "title": "Legal",
+      "links": [
+        "Terms of Service",
+        "Privacy Policy",
+        "Cookie Policy",
+        "Usage Guidelines"
+      ]
+    },
+    "rights": "All rights reserved. NexMedia AI"
+  },
+  "Auth": {
+    "login": "Login",
+    "register": "Register",
+    "email": "Email Address",
+    "password": "Password",
+    "name": "Full Name",
+    "submitLogin": "Sign In",
+    "submitRegister": "Create Account",
+    "noAccount": "Don\"t have an account?",
+    "haveAccount": "Already have an account?",
+    "forgotPassword": "Forgot Password?",
+    "forgotPasswordDesc": "Enter your email address and we'll send you a link to reset your password.",
+    "resetLinkSent": "If an account with this email exists, a password reset link has been sent. Please check your inbox.",
+    "backToLogin": "Back to Login",
+    "sendResetLink": "Send Reset Link",
+    "resetPasswordTitle": "Set New Password",
+    "resetPasswordDesc": "Enter your new password below.",
+    "passwordResetSuccess": "Your password has been successfully reset. Redirecting to login...",
+    "goToLogin": "Go to Login Now",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "submitResetPassword": "Reset Password"
+  },
+  "Profile": {
+    "title": "My Profile",
+    "usage": {
+      "title": "Usage & Limits",
+      "tokens": "Tokens Used",
+      "generations": "AI Generations",
+      "limit": "Monthly Limit"
+    },
+    "subscription": {
+      "title": "Current Subscription",
+      "plan": "Pro Plan",
+      "status": "Active",
+      "upgrade": "Upgrade Plan"
+    },
+    "transactions": {
+      "title": "Transactions History",
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "invoice": "Invoice"
+    }
+  },
+  "VoiceToText": {
+    "title": "Voice to Text",
+    "subtitle": "Transcribe or translate audio to text instantly with AI.",
+    "transcribe": "Transcribe (Original)",
+    "translate": "Translate",
+    "language": "Spoken Language",
+    "targetLanguage": "Target Language",
+    "upload": "Upload Audio",
+    "record": "Record Voice",
+    "mode": "Mode",
+    "processing": "Processing...",
+    "process": "Start Processing",
+    "result": "Result",
+    "copy": "Copy Text",
+    "download": "Download .txt",
+    "dragDrop": "Drag & drop audio file here or click to browse",
+    "recording": "Recording...",
+    "stopRecording": "Stop Recording",
+    "error": "An error occurred during processing."
+  },
+  "TextToVoice": {
+    "title": "Text to Voice Generator",
+    "subtitle": "Convert text into natural speech easily using our AI tool.",
+    "enterText": "Enter Your Text",
+    "maxChars": "max",
+    "chars": "chars",
+    "characters": "characters",
+    "voiceSettings": "Voice Settings",
+    "languageMode": "Language Mode",
+    "arabic": "Arabic",
+    "otherLangs": "Other Languages",
+    "freeAccountNotice": "Free Account - up to 150 chars and free voices only",
+    "upgradeNow": "Upgrade Now",
+    "chooseVoice": "Choose Voice",
+    "all": "All",
+    "male": "Male",
+    "female": "Female",
+    "free": "Free",
+    "premium": "Premium",
+    "speed": "Speed",
+    "audioFormat": "Audio Format",
+    "accent": "Accent",
+    "emotion": "Emotion",
+    "performanceStyle": "Performance Style",
+    "customInstructions": "Custom Instructions",
+    "recentConversions": "Recent Conversions",
+    "refresh": "Refresh",
+    "noConversions": "No conversions yet",
+    "textPlaceholder": "Enter text here (max 150 characters)",
+    "processing": "Generating...",
+    "process": "Generate Voice",
+    "result": "Result",
+    "download": "Download Audio",
+    "error": "An error occurred during generation."
+  },
+  "NotFound": {
+    "title": "Page Not Found",
+    "subtitle": "Oops! The page you are looking for does not exist or has been moved.",
+    "backHome": "Back to Home"
+  }
+}

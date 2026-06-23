@@ -1,0 +1,35 @@
+@{
+    ViewData["Title"] = "Mailing & Emails Dashboard";
+}
+
+<div class="bx--grid">
+    <div class="bx--row mb-4">
+        <div class="bx--col">
+            <h2 class="mb-2">Mailing Administration</h2>
+            <p class="text-gray-600 mb-4">Manage Brevo API settings, email templates, and broadcast messages to users.</p>
+            
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <div class="bx--tile" style="width: 300px; padding: 1.5rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;">
+                    <i class='bx bx-cog' style="font-size: 2rem; color: #0f62fe; margin-bottom: 1rem;"></i>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Settings</h3>
+                    <p style="font-size: 0.875rem; color: #525252; margin-bottom: 1rem;">Configure Brevo API Key, Sender Email, and Sender Name.</p>
+                    <a href="@Url.Action("Settings")" class="bx--btn bx--btn--primary bx--btn--sm">Manage Settings</a>
+                </div>
+
+                <div class="bx--tile" style="width: 300px; padding: 1.5rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;">
+                    <i class='bx bx-layout' style="font-size: 2rem; color: #0f62fe; margin-bottom: 1rem;"></i>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Templates</h3>
+                    <p style="font-size: 0.875rem; color: #525252; margin-bottom: 1rem;">Create and edit HTML email templates for reuse.</p>
+                    <a href="@Url.Action("Templates")" class="bx--btn bx--btn--primary bx--btn--sm">Manage Templates</a>
+                </div>
+
+                <div class="bx--tile" style="width: 300px; padding: 1.5rem; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px;">
+                    <i class='bx bx-send' style="font-size: 2rem; color: #0f62fe; margin-bottom: 1rem;"></i>
+                    <h3 style="margin-bottom: 0.5rem; font-size: 1.25rem;">Send Mail</h3>
+                    <p style="font-size: 0.875rem; color: #525252; margin-bottom: 1rem;">Broadcast emails to all users or target a specific user.</p>
+                    <a href="@Url.Action("SendMail")" class="bx--btn bx--btn--primary bx--btn--sm">Send Email</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+@model NexClone.Backend.Models.ManualPaymentMethod
+
+<div class="card">
+    <div class="card-body">
+        <form action="/ManualPaymentMethodsAdmin/Edit/@Model.Id" method="post" hx-boost="true">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <input type="hidden" name="CreatedAt" value="@Model.CreatedAt.ToString("o")" />
+
+            <div class="form-group">
+                <label>Name</label>
+                <input type="text" name="Name" class="form-control" value="@Model.Name" required />
+            </div>
+            <div class="form-group">
+                <label>Account Details</label>
+                <input type="text" name="AccountDetails" class="form-control" value="@Model.AccountDetails" required />
+            </div>
+            <div class="form-group">
+                <label>Instructions</label>
+                <textarea name="Instructions" class="form-control" rows="3">@Model.Instructions</textarea>
+            </div>
+            <div class="form-group" style="margin-top: 1rem;">
+                <label>
+                    <input type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") />
+                    Active
+                </label>
+                <input type="hidden" name="IsActive" value="false" />
+            </div>
+            <div style="margin-top: 1rem;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <a href="/ManualPaymentMethodsAdmin" class="btn btn-secondary" hx-boost="true">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

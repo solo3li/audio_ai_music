@@ -1,0 +1,164 @@
+@model NexClone.Backend.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="bx--grid bx--grid--full-width">
+    <div class="bx--row">
+        <div class="bx--col">
+            <h1 class="bx--type-productive-heading-05" style="margin-bottom: 2rem;">Overview Dashboard</h1>
+        </div>
+    </div>
+    
+    <!-- Top KPI Tiles -->
+    <div class="bx--row">
+        <!-- Users Tile -->
+        <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-4" style="margin-bottom: 1rem;">
+            <div data-tile="clickable" class="bx--tile bx--tile--clickable" tabindex="0">
+                <a href="/Users" class="bx--link" style="text-decoration: none; color: inherit;">
+                    <h3 class="bx--type-productive-heading-03">Total Users</h3>
+                    <p class="bx--type-productive-heading-06" style="margin-top: 1rem; color: #0f62fe;">@Model.TotalUsers.ToString("N0")</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Subscriptions Tile -->
+        <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-4" style="margin-bottom: 1rem;">
+            <div data-tile="clickable" class="bx--tile bx--tile--clickable" tabindex="0">
+                <a href="/Subscriptions" class="bx--link" style="text-decoration: none; color: inherit;">
+                    <h3 class="bx--type-productive-heading-03">Active Subscriptions</h3>
+                    <p class="bx--type-productive-heading-06" style="margin-top: 1rem; color: #24a148;">@Model.ActiveSubscriptions.ToString("N0")</p>
+                </a>
+            </div>
+        </div>
+
+        <!-- Revenue Tile -->
+        <div class="bx--col-sm-4 bx--col-md-4 bx--col-lg-4" style="margin-bottom: 1rem;">
+            <div data-tile="clickable" class="bx--tile bx--tile--clickable" tabindex="0">
+                <a href="javascript:void(0)" class="bx--link" style="text-decoration: none; color: inherit;">
+                    <h3 class="bx--type-productive-heading-03">Total Revenue</h3>
+                    <p class="bx--type-productive-heading-06" style="margin-top: 1rem; color: #da1e28;">$@Model.TotalRevenue.ToString("N2")</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chart Section -->
+    <div class="bx--row" style="margin-top: 2rem;">
+        <div class="bx--col">
+            <h2 class="bx--type-productive-heading-04" style="margin-bottom: 1rem;">Revenue Over Time</h2>
+            <div style="background-color: #262626; padding: 1rem; border-radius: 8px;">
+                <canvas id="revenueChart" width="400" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Table -->
+    <div class="bx--row" style="margin-top: 2rem;">
+        <div class="bx--col">
+            <h2 class="bx--type-productive-heading-04" style="margin-bottom: 1rem;">Recent Transactions</h2>
+            <div class="bx--data-table-container">
+                <table class="bx--data-table">
+                    <thead>
+                        <tr>
+                            <th><span class="bx--table-header-label">User</span></th>
+                            <th><span class="bx--table-header-label">Plan</span></th>
+                            <th><span class="bx--table-header-label">Amount</span></th>
+                            <th><span class="bx--table-header-label">Date</span></th>
+                            <th><span class="bx--table-header-label">Status</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.RecentActivity.Count == 0)
+                        {
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 2rem;">No recent transactions.</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var act in Model.RecentActivity)
+                            {
+                                <tr>
+                                    <td>@(act.User?.Email ?? "Unknown User")</td>
+                                    <td>@(act.Plan?.Name ?? "Unknown Plan")</td>
+                                    <td>$@act.Amount.ToString("N2")</td>
+                                    <td>@act.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                    <td>
+                                        @if (act.Status == "successful" || act.Status == "paid")
+                                        {
+                                            <span class="bx--tag bx--tag--green">Success</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="bx--tag bx--tag--red">@act.Status</span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var ctx = document.getElementById('revenueChart').getContext('2d');
+
+        // Parse data passed from the ViewModel
+        var labels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartLabels));
+        var dataPoints = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChartData));
+
+        var revenueChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Revenue (USD)',
+                    data: dataPoints,
+                    backgroundColor: 'rgba(36, 161, 72, 0.2)', // Carbon Green
+                    borderColor: 'rgba(36, 161, 72, 1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#f4f4f4' // Light text for dark theme
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#c6c6c6'
+                        },
+                        grid: {
+                            color: '#393939'
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: '#c6c6c6'
+                        },
+                        grid: {
+                            color: '#393939'
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>

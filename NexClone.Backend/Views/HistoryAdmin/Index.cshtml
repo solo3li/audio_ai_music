@@ -1,0 +1,76 @@
+@model IEnumerable<NexClone.Backend.Models.GenerationHistory>
+
+@{
+    ViewData["Title"] = "Operations History";
+}
+
+<div class="bx--data-table-container">
+    <div class="bx--data-table-header">
+        <h4 class="bx--data-table-header__title">Operations History</h4>
+        <p class="bx--data-table-header__description">View the latest 500 AI operations performed by users.</p>
+    </div>
+
+    <div style="margin-bottom: 2rem; background: #f4f4f4; padding: 1rem; border: 1px solid #e0e0e0;">
+        <form method="get" asp-action="Index" style="display: flex; gap: 1rem; align-items: flex-end;">
+            <div class="bx--form-item" style="flex: 1; max-width: 400px;">
+                <label for="searchEmail" class="bx--label">Search by User Email</label>
+                <div class="bx--text-input__field-wrapper">
+                    <input id="searchEmail" type="text" name="searchEmail" class="bx--text-input" placeholder="e.g. user@example.com" value="@ViewBag.CurrentSearch">
+                </div>
+            </div>
+            <div>
+                <button type="submit" class="bx--btn bx--btn--primary">Search</button>
+                @if (!string.IsNullOrEmpty(ViewBag.CurrentSearch as string))
+                {
+                    <a href="@Url.Action("Index")" class="bx--btn bx--btn--secondary">Clear</a>
+                }
+            </div>
+        </form>
+    </div>
+
+    <table class="bx--data-table bx--data-table--sort">
+        <thead>
+            <tr>
+                <th><span class="bx--table-header-label">User Email</span></th>
+                <th><span class="bx--table-header-label">Tool</span></th>
+                <th><span class="bx--table-header-label">Task</span></th>
+                <th><span class="bx--table-header-label">Status</span></th>
+                <th><span class="bx--table-header-label">Credits</span></th>
+                <th><span class="bx--table-header-label">Date</span></th>
+                <th><span class="bx--table-header-label">Actions</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.User?.Email</td>
+                    <td><span style="background: #e0e0e0; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">@item.Type</span></td>
+                    <td>@item.Title</td>
+                    <td>
+                        @if (item.Status == "completed") {
+                            <span style="color: green; font-weight: bold;">@item.Status</span>
+                        } else if (item.Status == "failed") {
+                            <span style="color: red; font-weight: bold;">@item.Status</span>
+                        } else {
+                            <span style="color: orange; font-weight: bold;">@item.Status</span>
+                        }
+                    </td>
+                    <td>@item.CreditsUsed</td>
+                    <td>@item.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                    <td>
+                        <a href="@Url.Action("Details", new { id = item.Id })" class="bx--btn bx--btn--sm bx--btn--secondary">
+                            <i class='bx bx-detail'></i> Details
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (!Model.Any())
+    {
+        <div style="text-align: center; padding: 2rem; color: #525252; background: #ffffff; border-bottom: 1px solid #e0e0e0;">
+            No operations found.
+        </div>
+    }
+</div>

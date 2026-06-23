@@ -1,0 +1,25 @@
+@model string
+
+@{
+    ViewData["Title"] = "System Logs";
+}
+
+<div class="bx--grid" style="padding-left: 0; max-width: 100%; margin-left: 0;">
+    <div class="bx--row" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0; font-weight: 400; font-size: 1.5rem;">@ViewData["Title"]</h2>
+        <form asp-action="ClearLogs" method="post" onsubmit="return confirm('Are you sure you want to clear all system logs?');">
+            <button type="submit" class="bx--btn bx--btn--danger bx--btn--sm">Clear Logs</button>
+        </form>
+    </div>
+
+    <div style="background: #161616; color: #f4f4f4; padding: 1rem; border-radius: 4px; font-family: monospace; font-size: 0.875rem; overflow-y: auto; max-height: 70vh; white-space: pre-wrap; word-wrap: break-word;">
+@if (string.IsNullOrWhiteSpace(Model))
+{
+<span style="color: #a8a8a8;">No logs available.</span>
+}
+else
+{
+@Model
+}
+    </div>
+</div>
