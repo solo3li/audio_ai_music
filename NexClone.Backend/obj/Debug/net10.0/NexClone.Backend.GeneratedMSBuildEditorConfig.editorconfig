@@ -20,165 +20,177 @@ build_property.TargetFrameworkVersion = v10.0
 build_property.EntryPointFilePath = 
 build_property.RootNamespace = NexClone.Backend
 build_property.RootNamespace = NexClone.Backend
-build_property.ProjectDir = /app/NexClone.Backend/
+build_property.ProjectDir = /src/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 10.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = /app/NexClone.Backend
+build_property.MSBuildProjectDirectory = /src
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[/app/NexClone.Backend/Views/ApiConfigAdmin/Create.cshtml]
+[/src/Views/ApiConfigAdmin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXBpQ29uZmlnQWRtaW4vQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ApiConfigAdmin/Edit.cshtml]
+[/src/Views/ApiConfigAdmin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXBpQ29uZmlnQWRtaW4vRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ApiConfigAdmin/Index.cshtml]
+[/src/Views/ApiConfigAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQXBpQ29uZmlnQWRtaW4vSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Checkout/Pay.cshtml]
+[/src/Views/Checkout/Pay.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2hlY2tvdXQvUGF5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Checkout/PayPalCheckout.cshtml]
+[/src/Views/Checkout/PayPalCheckout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2hlY2tvdXQvUGF5UGFsQ2hlY2tvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/HistoryAdmin/Index.cshtml]
+[/src/Views/HistoryAdmin/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSGlzdG9yeUFkbWluL0RldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[/src/Views/HistoryAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSGlzdG9yeUFkbWluL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Home/Index.cshtml]
+[/src/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Home/Privacy.cshtml]
+[/src/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/LogsAdmin/Index.cshtml]
+[/src/Views/LogsAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTG9nc0FkbWluL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/MailingAdmin/CreateTemplate.cshtml]
+[/src/Views/MailingAdmin/CreateTemplate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFpbGluZ0FkbWluL0NyZWF0ZVRlbXBsYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/MailingAdmin/EditTemplate.cshtml]
+[/src/Views/MailingAdmin/EditTemplate.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFpbGluZ0FkbWluL0VkaXRUZW1wbGF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/MailingAdmin/Index.cshtml]
+[/src/Views/MailingAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFpbGluZ0FkbWluL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/MailingAdmin/SendMail.cshtml]
+[/src/Views/MailingAdmin/SendMail.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFpbGluZ0FkbWluL1NlbmRNYWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/MailingAdmin/Settings.cshtml]
+[/src/Views/MailingAdmin/Settings.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFpbGluZ0FkbWluL1NldHRpbmdzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/MailingAdmin/Templates.cshtml]
+[/src/Views/MailingAdmin/Templates.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFpbGluZ0FkbWluL1RlbXBsYXRlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ManualPaymentMethodsAdmin/Create.cshtml]
+[/src/Views/ManualPaymentMethodsAdmin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFudWFsUGF5bWVudE1ldGhvZHNBZG1pbi9DcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ManualPaymentMethodsAdmin/Edit.cshtml]
+[/src/Views/ManualPaymentMethodsAdmin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFudWFsUGF5bWVudE1ldGhvZHNBZG1pbi9FZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ManualPaymentMethodsAdmin/Index.cshtml]
+[/src/Views/ManualPaymentMethodsAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFudWFsUGF5bWVudE1ldGhvZHNBZG1pbi9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ManualPaymentsAdmin/Index.cshtml]
+[/src/Views/ManualPaymentsAdmin/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFudWFsUGF5bWVudHNBZG1pbi9EZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[/src/Views/ManualPaymentsAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvTWFudWFsUGF5bWVudHNBZG1pbi9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/PaymentConfigAdmin/Create.cshtml]
+[/src/Views/PaymentConfigAdmin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5bWVudENvbmZpZ0FkbWluL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/PaymentConfigAdmin/Edit.cshtml]
+[/src/Views/PaymentConfigAdmin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5bWVudENvbmZpZ0FkbWluL0VkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/PaymentConfigAdmin/Index.cshtml]
+[/src/Views/PaymentConfigAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGF5bWVudENvbmZpZ0FkbWluL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Plans/Index.cshtml]
+[/src/Views/Plans/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGxhbnMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/PlansAdmin/Create.cshtml]
+[/src/Views/PlansAdmin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGxhbnNBZG1pbi9DcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/PlansAdmin/Edit.cshtml]
+[/src/Views/PlansAdmin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGxhbnNBZG1pbi9FZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/PlansAdmin/Index.cshtml]
+[/src/Views/PlansAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUGxhbnNBZG1pbi9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Shared/Error.cshtml]
+[/src/Views/SettingsAdmin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2V0dGluZ3NBZG1pbi9JbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[/src/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Shared/_ValidationScriptsPartial.cshtml]
+[/src/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Subscriptions/Index.cshtml]
+[/src/Views/Subscriptions/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU3Vic2NyaXB0aW9ucy9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ToolConfigAdmin/Create.cshtml]
+[/src/Views/ToolConfigAdmin/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVG9vbENvbmZpZ0FkbWluL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ToolConfigAdmin/Edit.cshtml]
+[/src/Views/ToolConfigAdmin/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVG9vbENvbmZpZ0FkbWluL0VkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/ToolConfigAdmin/Index.cshtml]
+[/src/Views/ToolConfigAdmin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVG9vbENvbmZpZ0FkbWluL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Users/Details.cshtml]
+[/src/Views/Users/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXNlcnMvRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Users/Index.cshtml]
+[/src/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXNlcnMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Voices/Index.cshtml]
+[/src/Views/Voices/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVm9pY2VzL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/_ViewImports.cshtml]
+[/src/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/_ViewStart.cshtml]
+[/src/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[/app/NexClone.Backend/Views/Shared/_Layout.cshtml]
+[/src/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-0yc1u00xnq

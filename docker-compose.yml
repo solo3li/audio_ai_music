@@ -7,8 +7,6 @@ services:
     container_name: nexclone-frontend
     ports:
       - "3000:3000"
-    env_file:
-      - ./frontend/.env.local
     networks:
       - nexclone_network
     depends_on:
@@ -28,8 +26,6 @@ services:
       - ConnectionStrings__DefaultConnection=Host=postgres;Port=5432;Database=nexclone;Username=postgres;Password=postgrespassword
       - ConnectionStrings__RedisConnection=redis:6379
       - Minio__Endpoint=minio:9000
-    env_file:
-      - .env
     networks:
       - nexclone_network
     depends_on:
